@@ -11,12 +11,12 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.init"
+		"onCommand:kha.init"
 	],
 	"main": "./extension",
 	"contributes": {
 		"commands": [{
-			"command": "extension.init",
+			"command": "kha.init",
 			"title": "Init Kha Project"
 		}]
 	},

@@ -11,13 +11,23 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:kha.init"
+		"onCommand:kha.init",
+		"onCommand:kha.compile"
 	],
 	"main": "./extension",
 	"contributes": {
 		"commands": [{
 			"command": "kha.init",
 			"title": "Init Kha Project"
+		},
+		{
+			"command": "kha.compile",
+			"title": "Compile Kha Project"
+		}],
+		"keybindings": [{
+				"command": "kha.compile"
+				, "key": "ctrl+b"
+				, "mac": "cmd+b"
 		}]
 	},
 	"devDependencies": {

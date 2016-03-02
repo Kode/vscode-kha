@@ -9,6 +9,17 @@ function activate(context) {
 	});
 	
 	context.subscriptions.push(disposable);
+	
+	disposable = vscode.commands.registerCommand('kha.compile', function () {
+		var exec = require('child_process').exec;
+		var cmd = 'haxe project-html5.hxml';
+		exec(cmd,{cwd: vscode.workspace.rootPath + '/build'}, function(error, stdout, stderr) {
+			if(error){vscode.window.showInformationMessage(error + " : " + stderr);}
+		});
+		
+	});
+	
+	context.subscriptions.push(disposable);
 }
 exports.activate = activate;
 

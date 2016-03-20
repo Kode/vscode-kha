@@ -18,7 +18,18 @@
 		"commands": [{
 			"command": "kha.init",
 			"title": "Init Kha Project"
-		}]
+		}],
+		"configuration": {
+            "type": "object",
+            "title": "Kha configuration",
+            "properties": {
+                "kha.khaPath": {
+					"type": "string",
+					"default": "",
+					"description": "Points to a Kha directory."
+                }
+            }
+        }
 	},
 	"devDependencies": {
 		"vscode": "0.10.x"

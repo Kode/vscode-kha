@@ -42,6 +42,7 @@ exports.activate = function (context) {
 				theora: '',
 				kfx: '',
 				krafix: '',
+				ffmpeg: vscode.extensions.getExtension('ktx.kha').extensionPath,
 				nokrafix: false,
 				embedflashassets: false,
 				compile: false,

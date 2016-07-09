@@ -11,8 +11,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:kha.init",
-		"onCommand:kha.compile"
+		"*"
 	],
 	"main": "./extension",
 	"contributes": {

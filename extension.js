@@ -9,6 +9,10 @@ function findKha() {
 	return path.join(vscode.extensions.getExtension('ktx.kha').extensionPath, 'Kha');
 }
 
+function findFFMPEG() {
+	return vscode.workspace.getConfiguration('kha').ffmpeg;
+}
+
 exports.activate = function (context) {
 	let disposable = vscode.commands.registerCommand('kha.init', function () {
 		require(path.join(findKha(), 'Tools', 'khamake', 'init.js')).run('Project', vscode.workspace.rootPath, 'khafile.js');
@@ -42,7 +46,7 @@ exports.activate = function (context) {
 				theora: '',
 				kfx: '',
 				krafix: '',
-				ffmpeg: vscode.extensions.getExtension('ktx.kha').extensionPath,
+				ffmpeg: findFFMPEG(),
 				nokrafix: false,
 				embedflashassets: false,
 				compile: false,
@@ -88,12 +92,15 @@ exports.activate = function (context) {
 	});
 
 	context.subscriptions.push(disposable);
+
+	let api = {
+		findKha: findKha,
+		findFFMPEG: findFFMPEG
+	};
+
+	return api;
 };
 
 exports.deactivate = function () {
 
-};
-
-exports.findKha = function () {
-	return findKha();
 };

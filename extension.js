@@ -93,6 +93,18 @@ exports.activate = function (context) {
 
 	context.subscriptions.push(disposable);
 
+	disposable = vscode.commands.registerCommand('kha.findKha', function () {
+		return findKha();
+	});
+
+	context.subscriptions.push(disposable);
+
+	disposable = vscode.commands.registerCommand('kha.findFFMPEG', function () {
+		return findFFMPEG();
+	});
+
+	context.subscriptions.push(disposable);
+
 	let api = {
 		findKha: findKha,
 		findFFMPEG: findFFMPEG

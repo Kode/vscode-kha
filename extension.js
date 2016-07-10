@@ -80,6 +80,7 @@ function getTargets() {
 		'Android (native)',
 		'iOS',
 		'Raspberry Pi',
+		'tvOS',
 		'Tizen',
 		'Flash',
 		'node.js',
@@ -104,6 +105,7 @@ function mapTarget(name) {
 		case 'Android (native)': return 'android-native';
 		case 'iOS': return 'ios';
 		case 'Raspberry Pi': return 'pi';
+		case 'tvOS': return 'tvos';
 		case 'Tizen': return 'tizen';
 		case 'Flash': return 'flash';
 		case 'node.js': return 'node';

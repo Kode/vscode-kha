@@ -50,21 +50,17 @@ function compile(target) {
 		server: false,
 		port: 8080,
 		debug: false,
-		silent: false
+		silent: false,
+		watch: false
 	};
-	try {
-		require(path.join(findKha(), 'Tools/khamake/main.js'))
-		.run(options, {
-			info: message => {
-				channel.appendLine(message);
-			}, error: message => {
-				channel.appendLine(message);
-			}
-		}, function (name) { });
-	}
-	catch (error) {
-		channel.appendLine('Error: ' + error.toString());
-	}
+	require(path.join(findKha(), 'Tools/khamake/out/main.js'))
+	.run(options, {
+		info: message => {
+			channel.appendLine(message);
+		}, error: message => {
+			channel.appendLine(message);
+		}
+	});
 }
 
 function getTargets() {

@@ -117,7 +117,7 @@ exports.activate = function (context) {
 	channel = vscode.window.createOutputChannel('Kha');
 
 	let disposable = vscode.commands.registerCommand('kha.init', function () {
-		require(path.join(findKha(), 'Tools', 'khamake', 'init.js')).run('Project', vscode.workspace.rootPath, 'khafile.js');
+		require(path.join(findKha(), 'Tools', 'khamake', 'out', 'init.js')).run('Project', vscode.workspace.rootPath, 'khafile.js');
 		vscode.commands.executeCommand('workbench.action.reloadWindow');
 		vscode.window.showInformationMessage('Kha project created.');
 	});

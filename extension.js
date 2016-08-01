@@ -53,7 +53,7 @@ function compile(target) {
 		silent: false,
 		watch: false
 	};
-	require(path.join(findKha(), 'Tools/khamake/out/main.js'))
+	return require(path.join(findKha(), 'Tools/khamake/out/main.js'))
 	.run(options, {
 		info: message => {
 			channel.appendLine(message);

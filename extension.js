@@ -19,6 +19,7 @@ function findFFMPEG() {
 }
 
 function compile(target) {
+	channel.appendLine('Using Kha from ' + findKha());
 	let options = {
 		from: vscode.workspace.rootPath,
 		to: path.join(vscode.workspace.rootPath, 'build'),
@@ -127,7 +128,7 @@ exports.activate = function (context) {
 	disposable = vscode.commands.registerCommand('kha.compile', function () {
 		vscode.window.showQuickPick(getTargets()).then(target => {
 			channel.show();
-			channel.appendLine('Compiling to ' + target);
+			channel.appendLine('Compiling to ' + target + '.');
 			compile(mapTarget(target));
 		});
 	});

@@ -46,7 +46,7 @@ function compile(target) {
 		ffmpeg: findFFMPEG(),
 		nokrafix: false,
 		embedflashassets: false,
-		compile: false,
+		compile: true,
 		run: false,
 		init: false,
 		name: 'Project',

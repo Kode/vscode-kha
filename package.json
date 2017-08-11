@@ -23,11 +23,6 @@
 			"command": "kha.compile",
 			"title": "Compile Kha Project"
 		}],
-		"keybindings": [{
-				"command": "kha.compile"
-				, "key": "ctrl+b"
-				, "mac": "cmd+b"
-		}],
 		"configuration": {
             "type": "object",
             "title": "Kha configuration",

@@ -21,7 +21,6 @@ function findFFMPEG() {
 function compile(target) {
 	channel.appendLine('Saving all files.');
 	vscode.commands.executeCommand('workbench.action.files.saveAll');
-	channel.appendLine('Using Kha from ' + findKha());
 	let options = {
 		from: vscode.workspace.rootPath,
 		to: path.join(vscode.workspace.rootPath, 'build'),
@@ -30,8 +29,8 @@ function compile(target) {
 		vr: 'none',
 		pch: false,
 		intermediate: '',
-		graphics: 'direct3d9',
-		visualstudio: 'vs2015',
+		graphics: 'direct3d11',
+		visualstudio: 'vs2017',
 		kha: '',
 		haxe: '',
 		ogg: '',

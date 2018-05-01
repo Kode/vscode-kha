@@ -3,7 +3,7 @@
 	"displayName": "Kha",
 	"description": "Kha support",
 	"version": "17.9.1",
-	"publisher": "robdangerous",
+	"publisher": "kodetech",
 	"engines": {
 		"vscode": "^0.10.1"
 	},

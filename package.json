@@ -5,7 +5,7 @@
 	"version": "17.9.1",
 	"publisher": "kodetech",
 	"engines": {
-		"vscode": "^0.10.1"
+		"vscode": "^1.23.0"
 	},
 	"categories": [
 		"Other"
@@ -15,36 +15,46 @@
 	],
 	"main": "./extension",
 	"contributes": {
-		"commands": [{
-			"command": "kha.init",
-			"title": "Init Kha Project"
-		},
-		{
-			"command": "kha.compile",
-			"title": "Compile Kha Project"
-		}],
+		"commands": [
+			{
+				"command": "kha.init",
+				"title": "Init Kha Project"
+			},
+			{
+				"command": "kha.compile",
+				"title": "Compile Kha Project"
+			}
+		],
 		"configuration": {
-            "type": "object",
-            "title": "Kha configuration",
-            "properties": {
-                "kha.khaPath": {
+			"type": "object",
+			"title": "Kha configuration",
+			"properties": {
+				"kha.khaPath": {
 					"type": "string",
 					"default": "",
 					"description": "Points to a Kha directory."
-                },
+				},
 				"kha.ffmpeg": {
 					"type": "string",
 					"default": "",
 					"description": "Path to ffmpeg for extended audio and video format support."
 				}
-            }
-        }
-	},
-	"devDependencies": {
-		"vscode": "0.10.x"
+			}
+		}
 	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/Kode/vscode-kha"
+	},
+	"scripts": {
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "node ./node_modules/vscode/bin/test"
+	},
+	"devDependencies": {
+		"typescript": "^2.6.1",
+		"vscode": "^1.1.6",
+		"eslint": "^4.11.0",
+		"@types/node": "^7.0.43",
+		"@types/mocha": "^2.2.42"
 	}
 }

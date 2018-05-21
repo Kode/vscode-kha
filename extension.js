@@ -21,6 +21,17 @@ function findFFMPEG() {
 function compile(target) {
 	channel.appendLine('Saving all files.');
 	vscode.commands.executeCommand('workbench.action.files.saveAll');
+
+	if (!vscode.workspace.rootPath) {
+		channel.appendLine('No project opened.');
+		return;
+	}
+	
+	if (!fs.existsSync(path.join(vscode.workspace.rootPath, 'khafile.js'))) {
+		channel.appendLine('No khafile found.');
+		return;
+	}
+
 	let options = {
 		from: vscode.workspace.rootPath,
 		to: path.join(vscode.workspace.rootPath, 'build'),
@@ -115,10 +126,20 @@ function mapTarget(name) {
 	}
 }
 
-exports.activate = function (context) {
+exports.activate = (context) => {
 	channel = vscode.window.createOutputChannel('Kha');
 
 	let disposable = vscode.commands.registerCommand('kha.init', function () {
+		if (!vscode.workspace.rootPath) {
+			channel.appendLine('No project opened.');
+			return;
+		}
+
+		if (fs.existsSync(path.join(vscode.workspace.rootPath, 'khafile.js'))) {
+			channel.appendLine('A Kha project already exists in the project directory.');
+			return;
+		}
+
 		require(path.join(findKha(), 'Tools', 'khamake', 'out', 'init.js')).run('Project', vscode.workspace.rootPath, 'khafile.js');
 		vscode.commands.executeCommand('workbench.action.reloadWindow');
 		vscode.window.showInformationMessage('Kha project created.');
@@ -157,6 +178,6 @@ exports.activate = function (context) {
 	return api;
 };
 
-exports.deactivate = function () {
+exports.deactivate = () => {
 
 };

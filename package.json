@@ -2,7 +2,7 @@
 	"name": "kha",
 	"displayName": "Kha",
 	"description": "Kha support",
-	"version": "17.9.1",
+	"version": "18.5.0",
 	"publisher": "kodetech",
 	"engines": {
 		"vscode": "^1.23.0"

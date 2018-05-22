@@ -11,7 +11,7 @@ function findKha() {
 	if (fs.existsSync(localkhapath)) return localkhapath;
 	let khapath = vscode.workspace.getConfiguration('kha').khaPath;
 	if (khapath.length > 0) return khapath;
-	return path.join(vscode.extensions.getExtension('ktx.kha').extensionPath, 'Kha');
+	return path.join(vscode.extensions.getExtension('kodetech.kha').extensionPath, 'Kha');
 }
 
 function findFFMPEG() {

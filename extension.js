@@ -126,8 +126,41 @@ function mapTarget(name) {
 	}
 }
 
+function checkProject(rootPath) {
+	if (!fs.existsSync(path.join(rootPath, 'khafile.js'))) {
+		return;
+	}
+
+	const configuration = vscode.workspace.getConfiguration();
+	const launchConfig =  {
+		version: '0.2.0',
+		configurations: [
+			{
+				type: 'electron',
+				request: 'launch',
+				name: 'HTML5',
+				appDir: '${workspaceFolder}/build/debug-html5',
+				sourceMaps: true
+			}
+		]
+	};
+	configuration.update('launch', launchConfig, false);
+}
+
 exports.activate = (context) => {
 	channel = vscode.window.createOutputChannel('Kha');
+
+	if (vscode.workspace.rootPath) {
+		checkProject(vscode.workspace.rootPath);
+	}
+
+	vscode.workspace.onDidChangeWorkspaceFolders((e) => {
+		for (let folder of e.added) {
+			if (folder.uri.fsPath) {
+				checkProject(folder.uri.fsPath);
+			}
+		}
+	});
 
 	let disposable = vscode.commands.registerCommand('kha.init', function () {
 		if (!vscode.workspace.rootPath) {

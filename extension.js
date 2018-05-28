@@ -140,11 +140,73 @@ function checkProject(rootPath) {
 				request: 'launch',
 				name: 'HTML5',
 				appDir: '${workspaceFolder}/build/debug-html5',
-				sourceMaps: true
+				sourceMaps: true,
+				preLaunchTask: 'Kha: Build for Debug HTML5'
 			}
 		]
 	};
 	configuration.update('launch', launchConfig, false);
+}
+
+const KhaTaskProvider = {
+	provideTasks: () => {
+		let workspaceRoot = vscode.workspace.rootPath;
+		if (!workspaceRoot) {
+			return [];
+		}
+
+		const systems = [
+			{ arg: 'debug-html5', name: 'Debug HTML5', default: true },
+			{ arg: 'krom', name: 'Krom', default: false },
+			{ arg: 'html5', name: 'HTML5', default: false },
+			{ arg: 'windows', name: 'Windows', default: false },
+			{ arg: 'windowsapp', name: 'Windows Universal', default: false },
+			{ arg: 'osx', name: 'macOS', default: false },
+			{ arg: 'linux', name: 'Linux', default: false },
+			{ arg: 'android', name: 'Android', default: false },
+			{ arg: 'android-native', name: 'Android (native)', default: false },
+			{ arg: 'ios', name: 'iOS', default: false },
+			{ arg: 'pi', name: 'Raspberry Pi', default: false },
+			{ arg: 'tvos', name: 'tvOS', default: false },
+			{ arg: 'tizen', name: 'Tizen', default: false },
+			{ arg: 'flash', name: 'Flash', default: false },
+			{ arg: 'node', name: 'Node.js', default: false },
+			{ arg: 'unity', name: 'Unity', default: false },
+			{ arg: 'xna', name: 'XNA', default: false },
+			{ arg: 'psm', name: 'PlayStation Mobile', default: false },
+			{ arg: 'java', name: 'Java', default: false },
+			{ arg: 'wpf', name: 'WPF', default: false },
+			{ arg: 'ps4', name: 'PlayStation 4', default: false },
+			{ arg: 'xboxone', name: 'Xbox One', default: false },
+			{ arg: 'switch', name: 'Switch', default: false }
+		];
+	
+		let tasks = [];
+		for (const system of systems) {
+			let args = [system.arg];
+			if (findFFMPEG() > 0) {
+				args.push('--ffmpeg');
+				args.push(findFFMPEG());
+			}
+			let kind = {
+				taskName: 'Build for ' + system.name,
+				type: 'Kha',
+				focus: true,
+				group: {
+					kind: 'build',
+					isDefault: system.default
+				}
+			};
+			let task = new vscode.Task(kind, kind.taskName, 'Kha', new vscode.ShellExecution('node ' + path.join(findKha(), 'make.js') + ' ' + args.join(' ')));
+			task.group = vscode.TaskGroup.Build;
+			tasks.push(task);
+		}
+
+		return tasks;
+	},
+	resolveTask: () => {
+		return undefined;
+	}
 }
 
 exports.activate = (context) => {
@@ -153,6 +215,9 @@ exports.activate = (context) => {
 	if (vscode.workspace.rootPath) {
 		checkProject(vscode.workspace.rootPath);
 	}
+
+	let provider = vscode.workspace.registerTaskProvider('Kha', KhaTaskProvider);
+	context.subscriptions.push(provider);
 
 	vscode.workspace.onDidChangeWorkspaceFolders((e) => {
 		for (let folder of e.added) {

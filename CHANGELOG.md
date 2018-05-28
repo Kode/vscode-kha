@@ -1,3 +1,7 @@
+### 18.5.3
+
+Create build tasks
+
 ### 18.5.2
 
 Automatically create a launch configuration

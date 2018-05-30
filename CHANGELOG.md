@@ -1,3 +1,7 @@
+### 18.5.4
+
+Be less destructive when creating the launch configuration
+
 ### 18.5.3
 
 Create build tasks

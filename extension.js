@@ -132,20 +132,21 @@ function checkProject(rootPath) {
 	}
 
 	const configuration = vscode.workspace.getConfiguration();
-	const launchConfig =  {
-		version: '0.2.0',
-		configurations: [
-			{
-				type: 'electron',
-				request: 'launch',
-				name: 'HTML5',
-				appDir: '${workspaceFolder}/build/debug-html5',
-				sourceMaps: true,
-				preLaunchTask: 'Kha: Build for Debug HTML5'
-			}
-		]
-	};
-	configuration.update('launch', launchConfig, false);
+	let config = configuration.get('launch');
+	config.configurations = config.configurations.filter((value) => {
+		return !value.name.startsWith('Kha: ');
+	});
+	config.configurations.push(
+		{
+			type: 'electron',
+			request: 'launch',
+			name: 'Kha: HTML5',
+			appDir: '${workspaceFolder}/build/debug-html5',
+			sourceMaps: true,
+			preLaunchTask: 'Kha: Build for Debug HTML5'
+		}
+	);
+	configuration.update('launch', config, false);
 }
 
 const KhaTaskProvider = {

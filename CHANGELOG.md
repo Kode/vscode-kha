@@ -1,3 +1,7 @@
+### 18.5.5
+
+Configure vshaxe for code-completion
+
 ### 18.5.4
 
 Be less destructive when creating the launch configuration

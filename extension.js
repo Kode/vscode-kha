@@ -18,9 +18,11 @@ function findFFMPEG() {
 	return vscode.workspace.getConfiguration('kha').ffmpeg;
 }
 
-function compile(target) {
-	channel.appendLine('Saving all files.');
-	vscode.commands.executeCommand('workbench.action.files.saveAll');
+function compile(target, silent) {
+	if (!silent) {
+		channel.appendLine('Saving all files.');
+		vscode.commands.executeCommand('workbench.action.files.saveAll');
+	}
 
 	if (!vscode.workspace.rootPath) {
 		channel.appendLine('No project opened.');
@@ -126,10 +128,64 @@ function mapTarget(name) {
 	}
 }
 
+let KhaDisplayArgumentsProvider = {
+	init: (api, activationChangedCallback) => {
+		this.api = api;
+		this.activationChangedCallback = activationChangedCallback;
+		this.description = 'Kha project';
+	},
+	activate: (provideArguments) => {
+		this.updateArgumentsCallback = provideArguments;
+		if (this.args) {
+			this.update(this.args);
+		}
+		this.activationChangedCallback(true);
+	},	
+	deactivate: () => {
+		this.updateArgumentsCallback = null;
+		this.activationChangedCallback(false);
+	},
+	update: (args) => {
+		if (this.args !== args && this.api) {
+			this.args = args;
+			this.parsedArguments = this.api.parseHxmlToArguments(args);
+			KhaDisplayArgumentsProvider.updateArguments();
+		}
+	},	
+	updateArguments: () => {
+		if (this.updateArgumentsCallback) {
+			this.updateArgumentsCallback(this.parsedArguments);
+		}
+	}
+}
+
+function updateHaxeArguments(rootPath, hxmlPath) {
+	const hxml = fs.readFileSync(hxmlPath, 'utf8');
+	KhaDisplayArgumentsProvider.update('--cwd ' + path.join(rootPath, 'build') + '\n' + hxml);
+}
+
+function configureVsHaxe(rootPath) {
+	let vshaxe = vscode.extensions.getExtension('nadako.vshaxe').exports;
+	KhaDisplayArgumentsProvider.init(vshaxe, () => {
+		const hxmlPath = path.join(rootPath, 'build', 'project-debug-html5.hxml');
+		if (fs.existsSync(hxmlPath)) {
+			updateHaxeArguments(rootPath, hxmlPath);
+		}
+		else {
+			compile('debug-html5', true).then(() => {
+				updateHaxeArguments(rootPath, hxmlPath);
+			});
+		}
+	});
+	vshaxe.registerDisplayArgumentsProvider('Kha', KhaDisplayArgumentsProvider);
+}
+
 function checkProject(rootPath) {
 	if (!fs.existsSync(path.join(rootPath, 'khafile.js'))) {
 		return;
 	}
+
+	configureVsHaxe(rootPath);
 
 	const configuration = vscode.workspace.getConfiguration();
 	let config = configuration.get('launch');

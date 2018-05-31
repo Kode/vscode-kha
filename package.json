@@ -2,7 +2,7 @@
 	"name": "kha",
 	"displayName": "Kha",
 	"description": "Kha support",
-	"version": "18.5.4",
+	"version": "18.5.5",
 	"publisher": "kodetech",
 	"engines": {
 		"vscode": "^1.23.0"
@@ -11,7 +11,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"*"
+		"workspaceContains:khafile.js"
 	],
 	"main": "./extension",
 	"contributes": {
@@ -56,5 +56,8 @@
 		"eslint": "^4.11.0",
 		"@types/node": "^7.0.43",
 		"@types/mocha": "^2.2.42"
-	}
+	},
+	"extensionDependencies": [
+		"nadako.vshaxe"
+	]
 }

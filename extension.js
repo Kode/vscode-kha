@@ -210,6 +210,28 @@ const KhaTaskProvider = {
 	}
 }
 
+const KhaDebugProvider = {
+	provideDebugConfigurations: (folder) => {
+		let configs = [];
+		
+		folder.uri;
+
+		configs.push({
+			name: 'Kha: HTML5',
+			request: 'launch',
+			type: 'electron',
+			appDir: '${workspaceFolder}/build/debug-html5',
+			sourceMaps: true,
+			preLaunchTask: 'Kha: Build for Debug HTML5'
+		});
+
+		return configs;
+	},
+	resolveDebugConfiguration: (folder, debugConfiguration) => {
+		return undefined;
+	}
+}
+
 exports.activate = (context) => {
 	channel = vscode.window.createOutputChannel('Kha');
 
@@ -219,6 +241,10 @@ exports.activate = (context) => {
 
 	let provider = vscode.workspace.registerTaskProvider('Kha', KhaTaskProvider);
 	context.subscriptions.push(provider);
+
+	// TODO: Figure out why this prevents debugging
+	// let debugProvider = vscode.debug.registerDebugConfigurationProvider('electron', KhaDebugProvider);
+	// context.subscriptions.push(debugProvider);
 
 	vscode.workspace.onDidChangeWorkspaceFolders((e) => {
 		for (let folder of e.added) {

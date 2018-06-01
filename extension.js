@@ -149,12 +149,9 @@ let KhaDisplayArgumentsProvider = {
 		if (this.args !== args && this.api) {
 			this.args = args;
 			this.parsedArguments = this.api.parseHxmlToArguments(args);
-			KhaDisplayArgumentsProvider.updateArguments();
-		}
-	},	
-	updateArguments: () => {
-		if (this.updateArgumentsCallback) {
-			this.updateArgumentsCallback(this.parsedArguments);
+			if (this.updateArgumentsCallback) {
+				this.updateArgumentsCallback(this.parsedArguments);
+			}
 		}
 	}
 }
@@ -166,7 +163,9 @@ function updateHaxeArguments(rootPath, hxmlPath) {
 
 function configureVsHaxe(rootPath) {
 	let vshaxe = vscode.extensions.getExtension('nadako.vshaxe').exports;
-	KhaDisplayArgumentsProvider.init(vshaxe, () => {
+	KhaDisplayArgumentsProvider.init(vshaxe, (active) => {
+		if (!active) return;
+		
 		const hxmlPath = path.join(rootPath, 'build', 'project-debug-html5.hxml');
 		if (fs.existsSync(hxmlPath)) {
 			updateHaxeArguments(rootPath, hxmlPath);

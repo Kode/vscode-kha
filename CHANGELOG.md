@@ -1,3 +1,7 @@
+### 18.6.0
+
+Create Krom launch config
+
 ### 18.5.5
 
 Configure vshaxe for code-completion

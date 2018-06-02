@@ -191,16 +191,23 @@ function checkProject(rootPath) {
 	config.configurations = config.configurations.filter((value) => {
 		return !value.name.startsWith('Kha: ');
 	});
-	config.configurations.push(
-		{
-			type: 'electron',
-			request: 'launch',
-			name: 'Kha: HTML5',
-			appDir: '${workspaceFolder}/build/debug-html5',
-			sourceMaps: true,
-			preLaunchTask: 'Kha: Build for Debug HTML5'
-		}
-	);
+	config.configurations.push({
+		type: 'electron',
+		request: 'launch',
+		name: 'Kha: HTML5',
+		appDir: '${workspaceFolder}/build/debug-html5',
+		sourceMaps: true,
+		preLaunchTask: 'Kha: Build for Debug HTML5'
+	});
+	config.configurations.push({
+		type: 'krom',
+		request: 'launch',
+		name: 'Kha: Krom',
+		appDir: '${workspaceFolder}/build/krom',
+		resourcesDir: '${workspaceFolder}/build/krom-resources',
+		sourceMaps: true,
+		preLaunchTask: 'Kha: Build for Krom'
+	})
 	configuration.update('launch', config, false);
 }
 

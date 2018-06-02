@@ -1,3 +1,7 @@
+### 18.6.1
+
+Activate on commands
+
 ### 18.6.0
 
 Create Krom launch config

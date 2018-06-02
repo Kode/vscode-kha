@@ -2,7 +2,7 @@
 	"name": "kha",
 	"displayName": "Kha",
 	"description": "Kha support",
-	"version": "18.6.0",
+	"version": "18.6.1",
 	"publisher": "kodetech",
 	"engines": {
 		"vscode": "^1.23.0"
@@ -11,7 +11,9 @@
 		"Other"
 	],
 	"activationEvents": [
-		"workspaceContains:khafile.js"
+		"workspaceContains:khafile.js",
+		"onCommand:kha.init",
+		"onCommand:kha.compile"
 	],
 	"main": "./extension",
 	"contributes": {

@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const vscode = require('vscode');
 
@@ -179,9 +180,40 @@ function configureVsHaxe(rootPath) {
 	vshaxe.registerDisplayArgumentsProvider('Kha', KhaDisplayArgumentsProvider);
 }
 
+function sys() {
+	if (os.platform() === 'linux') {
+		if (os.arch() === 'arm') return '-linuxarm';
+		else if (os.arch() === 'x64') return '-linux64';
+		else return '-linux32';
+	}
+	else if (os.platform() === 'win32') {
+		return '.exe';
+	}
+	else {
+		return '-osx';
+	}
+}
+
+function chmodEverything() {
+	if (os.platform() === 'win32') {
+		return;
+	}
+	const base = findKha();
+	fs.chmodSync(path.join(base, 'Tools', 'haxe', 'haxe' + sys()), 0o755);
+	fs.chmodSync(path.join(base, 'Tools', 'kravur', 'kravur' + sys()), 0o755);
+	fs.chmodSync(path.join(base, 'Tools', 'lame', 'lame' + sys()), 0o755);
+	fs.chmodSync(path.join(base, 'Tools', 'oggenc', 'oggenc' + sys()), 0o755);
+	fs.chmodSync(path.join(base, 'Kore', 'Tools', 'kraffiti', 'kraffiti' + sys()), 0o755);
+	fs.chmodSync(path.join(base, 'Kore', 'Tools', 'krafix', 'krafix' + sys()), 0o755);
+}
+
 function checkProject(rootPath) {
 	if (!fs.existsSync(path.join(rootPath, 'khafile.js'))) {
 		return;
+	}
+
+	if (findKha() === path.join(vscode.extensions.getExtension('kodetech.kha').extensionPath, 'Kha')) {
+		chmodEverything()
 	}
 
 	configureVsHaxe(rootPath);

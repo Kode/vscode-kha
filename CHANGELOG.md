@@ -1,3 +1,7 @@
+### 18.6.2
+
+Chmod binaries on Linux and macOS
+
 ### 18.6.1
 
 Activate on commands

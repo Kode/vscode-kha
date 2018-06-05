@@ -79,56 +79,6 @@ function compile(target, silent) {
 	});
 }
 
-function getTargets() {
-	return [
-		'HTML5',
-		//'HTML5 (native)',
-		//'HTML5 Worker',
-		'Windows',
-		'Windows Universal',
-		'macOS',
-		'Linux',
-		'Android',
-		'Android (native)',
-		'iOS',
-		'Raspberry Pi',
-		'tvOS',
-		'Tizen',
-		'Flash',
-		'node.js',
-		'Unity',
-		'XNA',
-		'PlayStation Mobile',
-		'Java',
-		'WPF'
-	];
-}
-
-function mapTarget(name) {
-	switch (name) {
-		case 'HTML5': return 'html5';
-		case 'HTML5 (native)': return 'html5-native';
-		case 'HTML5 Worker': return 'html5worker';
-		case 'Windows': return 'windows';
-		case 'Windows Universal': return 'windowsapp';
-		case 'macOS': return 'osx';
-		case 'Linux': return 'linux';
-		case 'Android': return 'android';
-		case 'Android (native)': return 'android-native';
-		case 'iOS': return 'ios';
-		case 'Raspberry Pi': return 'pi';
-		case 'tvOS': return 'tvos';
-		case 'Tizen': return 'tizen';
-		case 'Flash': return 'flash';
-		case 'node.js': return 'node';
-		case 'Unity': return 'unity';
-		case 'XNA': return 'xna';
-		case 'PlayStation Mobile': return 'psm';
-		case 'Java': return 'java';
-		case 'WPF': return 'wpf';
-	}
-}
-
 let KhaDisplayArgumentsProvider = {
 	init: (api, activationChangedCallback) => {
 		this.api = api;
@@ -362,16 +312,6 @@ exports.activate = (context) => {
 		require(path.join(findKha(), 'Tools', 'khamake', 'out', 'init.js')).run('Project', vscode.workspace.rootPath, 'khafile.js');
 		vscode.commands.executeCommand('workbench.action.reloadWindow');
 		vscode.window.showInformationMessage('Kha project created.');
-	});
-
-	context.subscriptions.push(disposable);
-
-	disposable = vscode.commands.registerCommand('kha.compile', function () {
-		vscode.window.showQuickPick(getTargets()).then(target => {
-			channel.show();
-			channel.appendLine('Compiling to ' + target + '.');
-			compile(mapTarget(target));
-		});
 	});
 
 	context.subscriptions.push(disposable);

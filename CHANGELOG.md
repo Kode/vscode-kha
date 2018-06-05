@@ -1,3 +1,7 @@
+### 18.6.3
+
+Remove superfluous compile command
+
 ### 18.6.2
 
 Chmod binaries on Linux and macOS

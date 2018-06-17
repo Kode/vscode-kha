@@ -1,3 +1,7 @@
+### 18.6.4
+
+Improve local Kha path check
+
 ### 18.6.3
 
 Remove superfluous compile command

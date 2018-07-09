@@ -1,3 +1,7 @@
+### 18.7.0
+
+Fix tasks for vscode 1.25
+
 ### 18.6.4
 
 Improve local Kha path check

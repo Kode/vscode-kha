@@ -38,7 +38,21 @@
 					"description": "Path to ffmpeg for extended audio and video format support."
 				}
 			}
-		}
+		},
+		"taskDefinitions": [
+			{
+				"type": "Kha",
+				"required": [
+					"target"
+				],
+				"properties": {
+					"target": {
+						"type": "string",
+						"description": "The target to build for."
+					}
+				}
+			}
+		]
 	},
 	"repository": {
 		"type": "git",

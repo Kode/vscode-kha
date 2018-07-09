@@ -29,7 +29,7 @@ function compile(target, silent) {
 		channel.appendLine('No project opened.');
 		return;
 	}
-	
+
 	if (!fs.existsSync(path.join(vscode.workspace.rootPath, 'khafile.js'))) {
 		channel.appendLine('No khafile found.');
 		return;
@@ -91,7 +91,7 @@ let KhaDisplayArgumentsProvider = {
 			this.update(this.args);
 		}
 		this.activationChangedCallback(true);
-	},	
+	},
 	deactivate: () => {
 		this.updateArgumentsCallback = null;
 		this.activationChangedCallback(false);
@@ -116,7 +116,7 @@ function configureVsHaxe(rootPath) {
 	let vshaxe = vscode.extensions.getExtension('nadako.vshaxe').exports;
 	KhaDisplayArgumentsProvider.init(vshaxe, (active) => {
 		if (!active) return;
-		
+
 		const hxmlPath = path.join(rootPath, 'build', 'project-debug-html5.hxml');
 		if (fs.existsSync(hxmlPath)) {
 			updateHaxeArguments(rootPath, hxmlPath);
@@ -225,7 +225,7 @@ const KhaTaskProvider = {
 			{ arg: 'xboxone', name: 'Xbox One', default: false },
 			{ arg: 'switch', name: 'Switch', default: false }
 		];
-	
+
 		let tasks = [];
 		for (const system of systems) {
 			let args = [system.arg];
@@ -234,30 +234,25 @@ const KhaTaskProvider = {
 				args.push(findFFMPEG());
 			}
 			let kind = {
-				taskName: 'Build for ' + system.name,
 				type: 'Kha',
-				focus: true,
-				group: {
-					kind: 'build',
-					isDefault: system.default
-				}
-			};
-			let task = new vscode.Task(kind, kind.taskName, 'Kha', new vscode.ShellExecution('node ' + path.join(findKha(), 'make.js') + ' ' + args.join(' ')));
+				target: system.name,
+			}
+			let task = new vscode.Task(kind, `Build for ${system.name}`, 'Kha', new vscode.ShellExecution('node ' + path.join(findKha(), 'make.js') + ' ' + args.join(' ')), '$haxe');
 			task.group = vscode.TaskGroup.Build;
 			tasks.push(task);
 		}
 
 		return tasks;
 	},
-	resolveTask: () => {
-		return undefined;
+	resolveTask: (task, token) => {
+		return task;
 	}
 }
 
 const KhaDebugProvider = {
 	provideDebugConfigurations: (folder) => {
 		let configs = [];
-		
+
 		folder.uri;
 
 		configs.push({

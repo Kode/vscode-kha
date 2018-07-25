@@ -1,3 +1,7 @@
+### 18.7.1
+
+Set Haxe problem matcher
+
 ### 18.7.0
 
 Fix tasks for vscode 1.25

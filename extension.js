@@ -237,9 +237,8 @@ const KhaTaskProvider = {
 				type: 'Kha',
 				target: system.name,
 			}
-			let task = new vscode.Task(kind, `Build for ${system.name}`, 'Kha', new vscode.ShellExecution('node ' + path.join(findKha(), 'make.js') + ' ' + args.join(' ')), '$haxe');
+			let task = new vscode.Task(kind, `Build for ${system.name}`, 'Kha', new vscode.ShellExecution('node ' + path.join(findKha(), 'make.js') + ' ' + args.join(' ')), ['$haxe-absolute', '$haxe']);
 			task.group = vscode.TaskGroup.Build;
-			task.problemMatchers = ['$haxe-absolute', '$haxe'];
 			tasks.push(task);
 		}
 

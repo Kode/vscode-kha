@@ -1,3 +1,7 @@
+### 18.8.0
+
+Update Kha to 5b813c246e1e689f1509a601d0effb859c722f9d
+
 ### 18.7.1
 
 Set Haxe problem matcher

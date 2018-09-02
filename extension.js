@@ -229,7 +229,7 @@ const KhaTaskProvider = {
 		let tasks = [];
 		for (const system of systems) {
 			let args = [system.arg];
-			if (findFFMPEG() > 0) {
+			if (findFFMPEG().length > 0) {
 				args.push('--ffmpeg');
 				args.push(findFFMPEG());
 			}

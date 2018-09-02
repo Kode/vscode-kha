@@ -185,9 +185,6 @@ function checkProject(rootPath) {
 		type: 'krom',
 		request: 'launch',
 		name: 'Kha: Krom',
-		appDir: '${workspaceFolder}/build/krom',
-		resourcesDir: '${workspaceFolder}/build/krom-resources',
-		sourceMaps: true,
 		preLaunchTask: 'Kha: Build for Krom'
 	})
 	configuration.update('launch', config, false);

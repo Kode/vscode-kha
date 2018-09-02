@@ -1,3 +1,7 @@
+### 18.8.1
+
+Add a completion target selector
+
 ### 18.8.0
 
 Update Kha to 5b813c246e1e689f1509a601d0effb859c722f9d

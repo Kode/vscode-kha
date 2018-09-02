@@ -271,6 +271,8 @@ const KhaDebugProvider = {
 	}
 }
 
+let currentTarget = 'HTML5';
+
 exports.activate = (context) => {
 	channel = vscode.window.createOutputChannel('Kha');
 
@@ -311,16 +313,81 @@ exports.activate = (context) => {
 
 	context.subscriptions.push(disposable);
 
-	disposable = vscode.commands.registerCommand('kha.findKha', function () {
+	disposable = vscode.commands.registerCommand('kha.findKha', () => {
 		return findKha();
 	});
 
 	context.subscriptions.push(disposable);
 
-	disposable = vscode.commands.registerCommand('kha.findFFMPEG', function () {
+	disposable = vscode.commands.registerCommand('kha.findFFMPEG', () => {
 		return findFFMPEG();
 	});
 
+	context.subscriptions.push(disposable);
+
+	const targetItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+	targetItem.text = '$(desktop-download) HTML5';
+	targetItem.tooltip = 'Select Completion Target';
+	targetItem.command = 'kha.selectCompletionTarget';
+	targetItem.show();
+	context.subscriptions.push(targetItem);
+
+	disposable = vscode.commands.registerCommand("kha.selectCompletionTarget", () => {
+		let items = ['HTML5', 'Krom', 'Kore', 'Android (Java)', 'Flash', 'HTML5-Worker', 'Java', 'Node.js', 'Unity', 'WPF'];
+		vscode.window.showQuickPick(items).then((choice) => {
+			if (!choice || choice === currentTarget) {
+				return;
+			}
+
+			currentTarget = choice;
+			targetItem.text = '$(desktop-download) ' + choice;
+
+			function choiceToHxml() {
+				switch (choice) {
+					case 'HTML5':
+						return 'debug-html5';
+					case 'Krom':
+						return 'krom';
+					case 'Kore':
+						switch (process.platform) {
+							case 'win32':
+								return 'windows';
+							case 'darwin':
+								return 'osx';
+							case 'linux':
+								return 'linux';
+							default:
+								return process.platform;
+						}
+					case 'Android (Java)':
+						return 'android';
+					case 'Flash':
+						return 'flash';
+					case 'HTML5-Worker':
+						return 'html5-worker';
+					case 'Java':
+						return 'java';
+					case 'Node.js':
+						return 'node';
+					case 'Unity':
+						return 'unity';
+					case 'WPF':
+						return 'wpf';
+				}
+			}
+
+			const rootPath = vscode.workspace.rootPath;
+			const hxmlPath = path.join(rootPath, 'build', 'project-' + choiceToHxml() + '.hxml');
+			if (fs.existsSync(hxmlPath)) {
+				updateHaxeArguments(rootPath, hxmlPath);
+			}
+			else {
+				compile(choiceToHxml(), true).then(() => {
+					updateHaxeArguments(rootPath, hxmlPath);
+				});
+			}
+		});
+	});
 	context.subscriptions.push(disposable);
 
 	let api = {

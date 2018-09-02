@@ -1,3 +1,7 @@
+### 18.8.2
+
+Fix Krom launch configs and update Kha
+
 ### 18.8.1
 
 Add a completion target selector

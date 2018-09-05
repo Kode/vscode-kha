@@ -11,7 +11,7 @@ function findKha() {
 	let localkhapath = path.resolve(vscode.workspace.rootPath, 'Kha');
 	if (fs.existsSync(localkhapath) && fs.existsSync(path.join(localkhapath, 'Tools', 'khamake', 'out', 'main.js'))) return localkhapath;
 	let khapath = vscode.workspace.getConfiguration('kha').khaPath;
-	if (khapath.length > 0) return khapath;
+	if (khapath.length > 0) return path.resolve(khapath);
 	return path.join(vscode.extensions.getExtension('kodetech.kha').extensionPath, 'Kha');
 }
 

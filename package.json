@@ -10,6 +10,10 @@
 	"categories": [
 		"Other"
 	],
+	"keywords": [
+		"Kha",
+		"Haxe"
+	],
 	"activationEvents": [
 		"workspaceContains:khafile.js",
 		"onCommand:kha.init",

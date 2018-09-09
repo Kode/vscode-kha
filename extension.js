@@ -113,8 +113,22 @@ function updateHaxeArguments(rootPath, hxmlPath) {
 	KhaDisplayArgumentsProvider.update('--cwd ' + path.join(rootPath, buildDir) + '\n' + hxml);
 }
 
+function sys() {
+	if (os.platform() === 'linux') {
+		if (os.arch() === 'arm') return '-linuxarm';
+		else if (os.arch() === 'x64') return '-linux64';
+		else return '-linux32';
+	}
+	else if (os.platform() === 'win32') {
+		return '.exe';
+	}
+	else {
+		return '-osx';
+	}
+}
+
 function updateHaxe(vshaxe) {
-	vshaxe.haxeExecutable.configuration.executable = path.join(findKha(), 'Tools', 'haxe', 'haxe.exe');
+	vshaxe.haxeExecutable.configuration.executable = path.join(findKha(), 'Tools', 'haxe', 'haxe' + sys());
 	vshaxe.haxeExecutable.configuration.isCommand = false;
 	vshaxe.haxeExecutable.configuration.env = {
 		'HAXE_STD_PATH': path.join(findKha(), 'Tools', 'haxe', 'std')
@@ -139,21 +153,8 @@ function configureVsHaxe(rootPath) {
 			});
 		}
 	});
+	updateHaxe(vshaxe);
 	vshaxe.registerDisplayArgumentsProvider('Kha', KhaDisplayArgumentsProvider);
-}
-
-function sys() {
-	if (os.platform() === 'linux') {
-		if (os.arch() === 'arm') return '-linuxarm';
-		else if (os.arch() === 'x64') return '-linux64';
-		else return '-linux32';
-	}
-	else if (os.platform() === 'win32') {
-		return '.exe';
-	}
-	else {
-		return '-osx';
-	}
 }
 
 function chmodEverything() {

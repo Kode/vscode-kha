@@ -1,3 +1,7 @@
+### 18.9.0
+
+Use Kha's local Haxe for completion
+
 ### 18.8.2
 
 Fix Krom launch configs and update Kha

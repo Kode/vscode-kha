@@ -11,7 +11,7 @@ function findKha() {
 	let localkhapath = path.resolve(vscode.workspace.rootPath, 'Kha');
 	if (fs.existsSync(localkhapath) && fs.existsSync(path.join(localkhapath, 'Tools', 'khamake', 'out', 'main.js'))) return localkhapath;
 	let khapath = vscode.workspace.getConfiguration('kha').khaPath;
-	if (khapath.length > 0) return khapath;
+	if (khapath.length > 0) return path.resolve(khapath);
 	return path.join(vscode.extensions.getExtension('kodetech.kha').extensionPath, 'Kha');
 }
 
@@ -37,7 +37,7 @@ function compile(target, silent) {
 
 	let options = {
 		from: vscode.workspace.rootPath,
-		to: path.join(vscode.workspace.rootPath, 'build'),
+		to: path.join(vscode.workspace.rootPath, vscode.workspace.getConfiguration('kha').buildDir),
 		projectfile: 'khafile.js',
 		target: target,
 		vr: 'none',
@@ -109,7 +109,8 @@ let KhaDisplayArgumentsProvider = {
 
 function updateHaxeArguments(rootPath, hxmlPath) {
 	const hxml = fs.readFileSync(hxmlPath, 'utf8');
-	KhaDisplayArgumentsProvider.update('--cwd ' + path.join(rootPath, 'build') + '\n' + hxml);
+	const buildDir = vscode.workspace.getConfiguration('kha').buildDir;
+	KhaDisplayArgumentsProvider.update('--cwd ' + path.join(rootPath, buildDir) + '\n' + hxml);
 }
 
 function updateHaxe(vshaxe) {
@@ -180,6 +181,7 @@ function checkProject(rootPath) {
 	configureVsHaxe(rootPath);
 
 	const configuration = vscode.workspace.getConfiguration();
+	const buildDir = vscode.workspace.getConfiguration('kha').buildDir;
 	let config = configuration.get('launch');
 	config.configurations = config.configurations.filter((value) => {
 		return !value.name.startsWith('Kha: ');
@@ -188,7 +190,7 @@ function checkProject(rootPath) {
 		type: 'electron',
 		request: 'launch',
 		name: 'Kha: HTML5',
-		appDir: '${workspaceFolder}/build/debug-html5',
+		appDir: '${workspaceFolder}/' + buildDir + '/debug-html5',
 		sourceMaps: true,
 		preLaunchTask: 'Kha: Build for Debug HTML5'
 	});
@@ -263,11 +265,12 @@ const KhaDebugProvider = {
 
 		folder.uri;
 
+		const buildDir = vscode.workspace.getConfiguration('kha').buildDir;
 		configs.push({
 			name: 'Kha: HTML5',
 			request: 'launch',
 			type: 'electron',
-			appDir: '${workspaceFolder}/build/debug-html5',
+			appDir: '${workspaceFolder}/' + buildDir + '/debug-html5',
 			sourceMaps: true,
 			preLaunchTask: 'Kha: Build for Debug HTML5'
 		});
@@ -385,7 +388,8 @@ exports.activate = (context) => {
 			}
 
 			const rootPath = vscode.workspace.rootPath;
-			const hxmlPath = path.join(rootPath, 'build', 'project-' + choiceToHxml() + '.hxml');
+			const buildDir = vscode.workspace.getConfiguration('kha').buildDir;
+			const hxmlPath = path.join(rootPath, buildDir, 'project-' + choiceToHxml() + '.hxml');
 			if (fs.existsSync(hxmlPath)) {
 				updateHaxeArguments(rootPath, hxmlPath);
 			}

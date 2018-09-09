@@ -10,6 +10,10 @@
 	"categories": [
 		"Other"
 	],
+	"keywords": [
+		"Kha",
+		"Haxe"
+	],
 	"activationEvents": [
 		"workspaceContains:khafile.js",
 		"onCommand:kha.init",
@@ -36,6 +40,11 @@
 					"type": "string",
 					"default": "",
 					"description": "Path to ffmpeg for extended audio and video format support."
+				},
+				"kha.buildDir": {
+					"type": "string",
+					"default": "build",
+					"description": "Relative path to the Kha build dir for the project."
 				}
 			}
 		},

@@ -67,7 +67,10 @@ function compile(target, silent) {
 		port: 8080,
 		debug: false,
 		silent: false,
-		watch: false
+		watch: false,
+		shaderversion: 0,
+		parallelAssetConversion: 0,
+		haxe3: false
 	};
 	return require(path.join(findKha(), 'Tools', 'khamake', 'out', 'main.js'))
 	.run(options, {

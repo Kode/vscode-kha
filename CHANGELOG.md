@@ -1,3 +1,7 @@
+### 18.9.1
+
+Update khamake parameters
+
 ### 18.9.0
 
 Use Kha's local Haxe for completion

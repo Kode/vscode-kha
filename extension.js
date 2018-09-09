@@ -112,6 +112,15 @@ function updateHaxeArguments(rootPath, hxmlPath) {
 	KhaDisplayArgumentsProvider.update('--cwd ' + path.join(rootPath, 'build') + '\n' + hxml);
 }
 
+function updateHaxe(vshaxe) {
+	vshaxe.haxeExecutable.configuration.executable = path.join(findKha(), 'Tools', 'haxe', 'haxe.exe');
+	vshaxe.haxeExecutable.configuration.isCommand = false;
+	vshaxe.haxeExecutable.configuration.env = {
+		'HAXE_STD_PATH': path.join(findKha(), 'Tools', 'haxe', 'std')
+	};
+	vshaxe.haxeExecutable._onDidChangeConfiguration.fire(vshaxe.haxeExecutable.configuration);
+}
+
 function configureVsHaxe(rootPath) {
 	let vshaxe = vscode.extensions.getExtension('nadako.vshaxe').exports;
 	KhaDisplayArgumentsProvider.init(vshaxe, (active) => {
@@ -119,10 +128,12 @@ function configureVsHaxe(rootPath) {
 
 		const hxmlPath = path.join(rootPath, 'build', 'project-debug-html5.hxml');
 		if (fs.existsSync(hxmlPath)) {
+			updateHaxe(vshaxe);
 			updateHaxeArguments(rootPath, hxmlPath);
 		}
 		else {
 			compile('debug-html5', true).then(() => {
+				updateHaxe(vshaxe);
 				updateHaxeArguments(rootPath, hxmlPath);
 			});
 		}

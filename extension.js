@@ -251,7 +251,19 @@ const KhaTaskProvider = {
 				type: 'Kha',
 				target: system.name,
 			}
-			let task = new vscode.Task(kind, `Build for ${system.name}`, 'Kha', new vscode.ShellExecution('node ' + path.join(findKha(), 'make.js') + ' ' + args.join(' ')), ['$haxe-absolute', '$haxe']);
+
+			let task = null;
+			if (vscode.env.appName.includes('Kode')) {
+				let exec = process.execPath;
+				if (exec.indexOf('Kode Studio Helper') >= 0) {
+					const dir = exec.substring(0, exec.lastIndexOf('/'));
+					exec = path.join(dir, '..', '..', '..', '..', 'MacOS', 'Electron');
+				}
+				task = new vscode.Task(kind, `Build for ${system.name}`, 'Kha', new vscode.ProcessExecution(exec, ['--khamake', path.join(findKha(), 'make.js')].concat(args), {cwd: workspaceRoot}), ['$haxe-absolute', '$haxe']);
+			}
+			else {
+				task = new vscode.Task(kind, `Build for ${system.name}`, 'Kha', new vscode.ShellExecution('node' [path.join(findKha(), 'make.js')].concat(args)), ['$haxe-absolute', '$haxe']);
+			}
 			task.group = vscode.TaskGroup.Build;
 			tasks.push(task);
 		}

@@ -391,7 +391,7 @@ exports.activate = (context) => {
 					case 'Flash':
 						return 'flash';
 					case 'HTML5-Worker':
-						return 'html5-worker';
+						return 'html5worker';
 					case 'Java':
 						return 'java';
 					case 'Node.js':

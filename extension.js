@@ -43,7 +43,7 @@ function compile(target, silent) {
 		vr: 'none',
 		pch: false,
 		intermediate: '',
-		graphics: 'direct3d11',
+		graphics: 'default',
 		visualstudio: 'vs2017',
 		kha: '',
 		haxe: '',

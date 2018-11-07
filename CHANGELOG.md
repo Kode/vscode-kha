@@ -1,3 +1,7 @@
+### 18.11.1
+
+Fix build tasks
+
 ### 18.11.0
 
 Update Kha and fix completion for some targets

@@ -262,7 +262,7 @@ const KhaTaskProvider = {
 				task = new vscode.Task(kind, `Build for ${system.name}`, 'Kha', new vscode.ProcessExecution(exec, ['--khamake', path.join(findKha(), 'make.js')].concat(args), {cwd: workspaceRoot}), ['$haxe-absolute', '$haxe']);
 			}
 			else {
-				task = new vscode.Task(kind, `Build for ${system.name}`, 'Kha', new vscode.ShellExecution('node' [path.join(findKha(), 'make.js')].concat(args)), ['$haxe-absolute', '$haxe']);
+				task = new vscode.Task(kind, `Build for ${system.name}`, 'Kha', new vscode.ShellExecution('node', [path.join(findKha(), 'make.js')].concat(args)), ['$haxe-absolute', '$haxe']);
 			}
 			task.group = vscode.TaskGroup.Build;
 			tasks.push(task);

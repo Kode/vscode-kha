@@ -1,3 +1,7 @@
+### 18.11.0
+
+Update Kha and fix completion for some targets
+
 ### 18.9.1
 
 Update khamake parameters

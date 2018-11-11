@@ -1,3 +1,7 @@
+### 18.11.3
+
+Update Kha
+
 ### 18.11.2
 
 Make khaPath resolution support project-local paths

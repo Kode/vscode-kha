@@ -221,13 +221,20 @@ const KhaTaskProvider = {
 			{ arg: 'krom', name: 'Krom', default: false },
 			{ arg: 'html5', name: 'HTML5', default: false },
 			{ arg: 'windows', name: 'Windows', default: false },
+			{ arg: 'windows', name: 'Windows (full build)', default: false, full: true},
 			{ arg: 'windowsapp', name: 'Windows Universal', default: false },
+			{ arg: 'windowsapp', name: 'Windows Universal (full build)', default: false, full: true },
 			{ arg: 'osx', name: 'macOS', default: false },
+			{ arg: 'osx', name: 'macOS (full build)', default: false, full: true },
 			{ arg: 'linux', name: 'Linux', default: false },
+			{ arg: 'linux', name: 'Linux (full build)', default: false, full: true },
 			{ arg: 'android', name: 'Android', default: false },
+			{ arg: 'android', name: 'Android (full build)', default: false, full: true },
 			{ arg: 'android-native', name: 'Android (native)', default: false },
+			{ arg: 'android-native', name: 'Android (native, full build)', default: false, full: true },
 			{ arg: 'ios', name: 'iOS', default: false },
 			{ arg: 'pi', name: 'Raspberry Pi', default: false },
+			{ arg: 'pi', name: 'Raspberry Pi (full build)', default: false, full: true },
 			{ arg: 'tvos', name: 'tvOS', default: false },
 			{ arg: 'tizen', name: 'Tizen', default: false },
 			{ arg: 'flash', name: 'Flash', default: false },
@@ -245,10 +252,16 @@ const KhaTaskProvider = {
 		let tasks = [];
 		for (const system of systems) {
 			let args = [system.arg];
+			
 			if (findFFMPEG().length > 0) {
 				args.push('--ffmpeg');
 				args.push(findFFMPEG());
 			}
+
+			if (system.full) {
+				args.push('--compile');
+			}
+
 			let kind = {
 				type: 'Kha',
 				target: system.name,

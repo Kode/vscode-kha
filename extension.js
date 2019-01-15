@@ -221,18 +221,31 @@ const KhaTaskProvider = {
 			{ arg: 'krom', name: 'Krom', default: false },
 			{ arg: 'html5', name: 'HTML5', default: false },
 			{ arg: 'windows', name: 'Windows', default: false },
-			{ arg: 'windows', name: 'Windows (full build)', default: false, full: true},
+			{ arg: 'windows', name: 'Windows (full build)', default: false, full: true },
+			{ arg: 'windows', name: 'Windows (Direct3D 12)', default: false, graphics: 'direct3d12' },
+			{ arg: 'windows', name: 'Windows (Direct3D 12, full build)', default: false, full: true, graphics: 'direct3d12' },
+			{ arg: 'windows', name: 'Windows (Direct3D 9)', default: false, graphics: 'direct3d9' },
+			{ arg: 'windows', name: 'Windows (Direct3D 9, full build)', default: false, full: true, graphics: 'direct3d9' },
+			{ arg: 'windows', name: 'Windows (Vulkan)', default: false, graphics: 'vulkan' },
+			{ arg: 'windows', name: 'Windows (Vulkan, full build)', default: false, full: true },
+			{ arg: 'windows', name: 'Windows (OpenGL)', default: false, graphics: 'opengl' },
+			{ arg: 'windows', name: 'Windows (OpenGL, full build)', default: false, full: true, graphics: 'opengl' },
 			{ arg: 'windowsapp', name: 'Windows Universal', default: false },
 			{ arg: 'windowsapp', name: 'Windows Universal (full build)', default: false, full: true },
 			{ arg: 'osx', name: 'macOS', default: false },
 			{ arg: 'osx', name: 'macOS (full build)', default: false, full: true },
+			{ arg: 'osx', name: 'macOS (OpenGL)', default: false, graphics: 'opengl' },
+			{ arg: 'osx', name: 'macOS (OpenGL, full build)', default: false, full: true, graphics: 'opengl' },
 			{ arg: 'linux', name: 'Linux', default: false },
 			{ arg: 'linux', name: 'Linux (full build)', default: false, full: true },
+			{ arg: 'linux', name: 'Linux (Vulkan)', default: false, graphics: 'vulkan' },
+			{ arg: 'linux', name: 'Linux (Vulkan, full build)', default: false, full: true, graphics: 'vulkan' },
 			{ arg: 'android', name: 'Android', default: false },
 			{ arg: 'android', name: 'Android (full build)', default: false, full: true },
 			{ arg: 'android-native', name: 'Android (native)', default: false },
 			{ arg: 'android-native', name: 'Android (native, full build)', default: false, full: true },
 			{ arg: 'ios', name: 'iOS', default: false },
+			{ arg: 'ios', name: 'iOS (OpenGL)', default: false, graphics: 'opengl' },
 			{ arg: 'pi', name: 'Raspberry Pi', default: false },
 			{ arg: 'pi', name: 'Raspberry Pi (full build)', default: false, full: true },
 			{ arg: 'tvos', name: 'tvOS', default: false },
@@ -260,6 +273,11 @@ const KhaTaskProvider = {
 
 			if (system.full) {
 				args.push('--compile');
+			}
+
+			if (system.graphics) {
+				args.push('--graphics');
+				args.push(system.graphics);
 			}
 
 			let kind = {

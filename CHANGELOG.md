@@ -1,3 +1,8 @@
+### 19.1.0
+
+* Add new build tasks for explicitly choosing graphics backends
+* Update Kha
+
 ### 18.11.4
 
 Support full builds

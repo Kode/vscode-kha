@@ -227,7 +227,7 @@ const KhaTaskProvider = {
 			{ arg: 'windows', name: 'Windows (Direct3D 9)', default: false, graphics: 'direct3d9' },
 			{ arg: 'windows', name: 'Windows (Direct3D 9, full build)', default: false, full: true, graphics: 'direct3d9' },
 			{ arg: 'windows', name: 'Windows (Vulkan)', default: false, graphics: 'vulkan' },
-			{ arg: 'windows', name: 'Windows (Vulkan, full build)', default: false, full: true },
+			{ arg: 'windows', name: 'Windows (Vulkan, full build)', default: false, full: true, graphics: 'vulkan' },
 			{ arg: 'windows', name: 'Windows (OpenGL)', default: false, graphics: 'opengl' },
 			{ arg: 'windows', name: 'Windows (OpenGL, full build)', default: false, full: true, graphics: 'opengl' },
 			{ arg: 'windowsapp', name: 'Windows Universal', default: false },

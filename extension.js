@@ -265,6 +265,10 @@ const KhaTaskProvider = {
 		let tasks = [];
 		for (const system of systems) {
 			let args = [system.arg];
+
+			if (system.arg === 'krom' || system.arg === 'debug-html5') {
+				args.push('--debug');
+			}
 			
 			if (findFFMPEG().length > 0) {
 				args.push('--ffmpeg');

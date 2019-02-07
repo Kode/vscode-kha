@@ -2,10 +2,10 @@
 	"name": "kha",
 	"displayName": "Kha",
 	"description": "Kha support",
-	"version": "19.1.0",
+	"version": "19.2.0",
 	"publisher": "kodetech",
 	"engines": {
-		"vscode": "^1.23.0"
+		"vscode": "^1.31.0"
 	},
 	"categories": [
 		"Other"

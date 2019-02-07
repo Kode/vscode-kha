@@ -1,3 +1,8 @@
+### 19.2.0
+
+* Fix task resolve in vscode 1.31
+* Update Kha
+
 ### 19.1.0
 
 * Add new build tasks for explicitly choosing graphics backends

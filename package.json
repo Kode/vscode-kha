@@ -24,7 +24,8 @@
 		"commands": [
 			{
 				"command": "kha.init",
-				"title": "Init Kha Project"
+				"title": "Init Project",
+				"category": "Kha"
 			}
 		],
 		"configuration": {

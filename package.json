@@ -30,7 +30,7 @@
 		],
 		"configuration": {
 			"type": "object",
-			"title": "Kha configuration",
+			"title": "Kha",
 			"properties": {
 				"kha.khaPath": {
 					"type": "string",

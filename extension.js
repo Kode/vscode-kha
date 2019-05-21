@@ -197,6 +197,7 @@ function checkProject(rootPath) {
 		request: 'launch',
 		name: 'Kha: HTML5',
 		appDir: '${workspaceFolder}/' + buildDir + '/debug-html5',
+		cwd: '${workspaceFolder}/' + buildDir + '/debug-html5',
 		sourceMaps: true,
 		preLaunchTask: 'Kha: Build for Debug HTML5'
 	});
@@ -269,7 +270,7 @@ const KhaTaskProvider = {
 			if (system.arg === 'krom' || system.arg === 'debug-html5') {
 				args.push('--debug');
 			}
-			
+
 			if (findFFMPEG().length > 0) {
 				args.push('--ffmpeg');
 				args.push(findFFMPEG());

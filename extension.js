@@ -198,13 +198,15 @@ function checkProject(rootPath) {
 		name: 'Kha: HTML5',
 		appDir: '${workspaceFolder}/' + buildDir + '/debug-html5',
 		sourceMaps: true,
-		preLaunchTask: 'Kha: Build for Debug HTML5'
+		preLaunchTask: 'Kha: Build for Debug HTML5',
+		internalConsoleOptions: 'openOnSessionStart',
 	});
 	config.configurations.push({
 		type: 'krom',
 		request: 'launch',
 		name: 'Kha: Krom',
-		preLaunchTask: 'Kha: Build for Krom'
+		preLaunchTask: 'Kha: Build for Krom',
+		internalConsoleOptions: 'openOnSessionStart',
 	})
 	configuration.update('launch', config, false);
 }
@@ -325,7 +327,8 @@ const KhaDebugProvider = {
 			type: 'electron',
 			appDir: '${workspaceFolder}/' + buildDir + '/debug-html5',
 			sourceMaps: true,
-			preLaunchTask: 'Kha: Build for Debug HTML5'
+			preLaunchTask: 'Kha: Build for Debug HTML5',
+			internalConsoleOptions: 'openOnSessionStart',
 		});
 
 		return configs;

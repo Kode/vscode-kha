@@ -171,8 +171,8 @@ function chmodEverything() {
 	fs.chmodSync(path.join(base, 'Tools', 'kravur', 'kravur' + sys()), 0o755);
 	fs.chmodSync(path.join(base, 'Tools', 'lame', 'lame' + sys()), 0o755);
 	fs.chmodSync(path.join(base, 'Tools', 'oggenc', 'oggenc' + sys()), 0o755);
-	fs.chmodSync(path.join(base, 'Kore', 'Tools', 'kraffiti', 'kraffiti' + sys()), 0o755);
-	fs.chmodSync(path.join(base, 'Kore', 'Tools', 'krafix', 'krafix' + sys()), 0o755);
+	fs.chmodSync(path.join(base, 'Kinc', 'Tools', 'kraffiti', 'kraffiti' + sys()), 0o755);
+	fs.chmodSync(path.join(base, 'Kinc', 'Tools', 'krafix', 'krafix' + sys()), 0o755);
 }
 
 function checkProject(rootPath) {
@@ -401,7 +401,7 @@ exports.activate = (context) => {
 	context.subscriptions.push(targetItem);
 
 	disposable = vscode.commands.registerCommand("kha.selectCompletionTarget", () => {
-		let items = ['HTML5', 'Krom', 'Kore', 'Android (Java)', 'Flash', 'HTML5-Worker', 'Java', 'Node.js', 'Unity', 'WPF'];
+		let items = ['HTML5', 'Krom', 'Kinc', 'Android (Java)', 'Flash', 'HTML5-Worker', 'Java', 'Node.js', 'Unity', 'WPF'];
 		vscode.window.showQuickPick(items).then((choice) => {
 			if (!choice || choice === currentTarget) {
 				return;
@@ -416,7 +416,7 @@ exports.activate = (context) => {
 						return 'debug-html5';
 					case 'Krom':
 						return 'krom';
-					case 'Kore':
+					case 'Kinc':
 						switch (process.platform) {
 							case 'win32':
 								return 'windows';

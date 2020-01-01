@@ -1,3 +1,7 @@
+### 20.1.0
+
+* Update Kha
+
 ### 19.2.0
 
 * Fix task resolve in vscode 1.31

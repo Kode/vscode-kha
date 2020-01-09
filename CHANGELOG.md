@@ -1,3 +1,7 @@
+### 20.1.2
+
+* Fix a possible task provider crash
+
 ### 20.1.1
 
 * Fix Git Bash support on Windows

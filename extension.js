@@ -294,11 +294,11 @@ const KhaTaskProvider = {
 
 			let task = null;
 			let khamakePath = path.join(findKha(), 'make.js');
-			let winShell = vscode.workspace.getConfiguration('terminal.integrated.shell').get('windows');
 
 			// On Windows, git bash shell won't accept backward slashes and will fail,
 			// so we explicitly need to convert path to unix-style.
-			if (os.platform() === 'win32' && winShell.indexOf('bash.exe') > -1) {
+			const winShell = vscode.workspace.getConfiguration('terminal.integrated.shell').get('windows');
+			if (os.platform() === 'win32' && winShell && winShell.indexOf('bash.exe') > -1) {
 				khamakePath = khamakePath.replace(/\\/g, '/');
 			}
 
@@ -311,7 +311,6 @@ const KhaTaskProvider = {
 				task = new vscode.Task(kind, `Build for ${system.name}`, 'Kha', new vscode.ProcessExecution(exec, ['--khamake', khamakePath].concat(args), {cwd: workspaceRoot}), ['$haxe-absolute', '$haxe']);
 			}
 			else {
-				
 				task = new vscode.Task(kind, vscode.TaskScope.Workspace, `Build for ${system.name}`, 'Kha', new vscode.ShellExecution('node', [khamakePath].concat(args)), ['$haxe-absolute', '$haxe']);
 			}
 			task.group = vscode.TaskGroup.Build;

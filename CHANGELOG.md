@@ -1,3 +1,7 @@
+### 20.1.1
+
+* Fix Git Bash support on Windows
+
 ### 20.1.0
 
 * Update Kha

@@ -1,3 +1,7 @@
+### 20.3.0
+
+* Update Kha
+
 ### 20.1.2
 
 * Fix a possible task provider crash

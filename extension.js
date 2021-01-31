@@ -7,12 +7,16 @@ const vscode = require('vscode');
 
 let channel = null;
 
-function findKha() {
+function findKha(channel) {
 	let localkhapath = path.resolve(vscode.workspace.rootPath, 'Kha');
 	if (fs.existsSync(localkhapath) && fs.existsSync(path.join(localkhapath, 'Tools', 'khamake', 'out', 'main.js'))) return localkhapath;
 	let khapath = vscode.workspace.getConfiguration('kha').khaPath;
 	if (khapath.length > 0) {
 		return path.isAbsolute(khapath) ? khapath : path.resolve(vscode.workspace.rootPath, khapath);
+	}
+
+	if (channel) {
+		channel.appendLine('Warning: Falling back to integrated Kha. Consider downloading an up to date version and setting the khaPath option.');
 	}
 	return path.join(vscode.extensions.getExtension('kodetech.kha').extensionPath, 'Kha');
 }
@@ -74,7 +78,7 @@ function compile(target, silent) {
 		parallelAssetConversion: 0,
 		haxe3: false
 	};
-	return require(path.join(findKha(), 'Tools', 'khamake', 'out', 'main.js'))
+	return require(path.join(findKha(channel), 'Tools', 'khamake', 'out', 'main.js'))
 	.run(options, {
 		info: message => {
 			channel.appendLine(message);

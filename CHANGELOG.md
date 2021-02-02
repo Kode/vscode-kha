@@ -1,3 +1,8 @@
+### 21.2.0
+
+* Print a warning when fallback Kha is used for compilation
+* Update Kha
+
 ### 20.4.0
 
 * Update Kha

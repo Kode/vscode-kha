@@ -81,5 +81,102 @@
 	},
 	"extensionDependencies": [
 		"nadako.vshaxe"
+	],
+	"runtimeDependencies": [
+		{
+			"description": "Electron for Windows (x86)",
+			"url": "https://github.com/electron/electron/releases/download/v9.4.4/electron-v9.4.4-win32-ia32.zip",
+			"installPath": ".electron/9.4.4",
+			"platforms": [
+				"win32"
+			],
+			"architectures": [
+				"x86"
+			],
+			"platformId": "win-x86"
+		},
+		{
+			"description": "Electron for Windows (x64)",
+			"url": "https://github.com/electron/electron/releases/download/v9.4.4/electron-v9.4.4-win32-x64.zip",
+			"installPath": ".electron/9.4.4",
+			"platforms": [
+				"win32"
+			],
+			"architectures": [
+				"x86_64"
+			],
+			"platformId": "win-x64"
+		},
+		{
+			"description": "Electron for macOS",
+			"url": "https://github.com/electron/electron/releases/download/v9.4.4/electron-v9.4.4-darwin-x64.zip",
+			"installPath": ".electron/9.4.4",
+			"platforms": [
+				"darwin"
+			],
+			"binaries": [
+				"./Electron.app/Contents/MacOS/Electron",
+				"./Electron.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework",
+				"./Electron.app/Contents/Frameworks/Mantle.framework/Versions/A/Mantle",
+				"./Electron.app/Contents/Frameworks/ReactiveCocoa.framework/Versions/A/ReactiveCocoa",
+				"./Electron.app/Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel",
+				"./Electron.app/Contents/Frameworks/Electron Helper.app/Contents/MacOS/Electron Helper",
+				"./Electron.app/Contents/Frameworks/Electron Helper EH.app/Contents/MacOS/Electron Helper EH",
+				"./Electron.app/Contents/Frameworks/Electron Helper NP.app/Contents/MacOS/Electron Helper NP"
+			],
+			"links": [
+				"./Electron.app/Contents/Frameworks/Electron Framework.framework/Electron Framework",
+				"./Electron.app/Contents/Frameworks/Electron Framework.framework/Libraries",
+				"./Electron.app/Contents/Frameworks/Electron Framework.framework/Resources",
+				"./Electron.app/Contents/Frameworks/Electron Framework.framework/Versions/Current",
+				"./Electron.app/Contents/Frameworks/Mantle.framework/Headers",
+				"./Electron.app/Contents/Frameworks/Mantle.framework/Mantle",
+				"./Electron.app/Contents/Frameworks/Mantle.framework/Modules",
+				"./Electron.app/Contents/Frameworks/Mantle.framework/Resources",
+				"./Electron.app/Contents/Frameworks/Mantle.framework/Versions/Current",
+				"./Electron.app/Contents/Frameworks/ReactiveCocoa.framework/Headers",
+				"./Electron.app/Contents/Frameworks/ReactiveCocoa.framework/Modules",
+				"./Electron.app/Contents/Frameworks/ReactiveCocoa.framework/ReactiveCocoa",
+				"./Electron.app/Contents/Frameworks/ReactiveCocoa.framework/Resources",
+				"./Electron.app/Contents/Frameworks/ReactiveCocoa.framework/Versions/Current",
+				"./Electron.app/Contents/Frameworks/Squirrel.framework/Headers",
+				"./Electron.app/Contents/Frameworks/Squirrel.framework/Modules",
+				"./Electron.app/Contents/Frameworks/Squirrel.framework/Resources",
+				"./Electron.app/Contents/Frameworks/Squirrel.framework/Squirrel",
+				"./Electron.app/Contents/Frameworks/Squirrel.framework/Versions/Current"
+			],
+			"platformId": "osx"
+		},
+		{
+			"description": "Electron for Linux (x86)",
+			"url": "https://github.com/electron/electron/releases/download/v9.4.4/electron-v9.4.4-linux-ia32.zip",
+			"installPath": ".electron/9.4.4",
+			"platforms": [
+				"linux"
+			],
+			"architectures": [
+				"x86",
+				"i686"
+			],
+			"binaries": [
+				"./electron"
+			],
+			"platformId": "linux-x86"
+		},
+		{
+			"description": "Electron for Linux (x64)",
+			"url": "https://github.com/electron/electron/releases/download/v9.4.4/electron-v9.4.4-linux-x64.zip",
+			"installPath": ".electron/9.4.4",
+			"platforms": [
+				"linux"
+			],
+			"architectures": [
+				"x86_64"
+			],
+			"binaries": [
+				"./electron"
+			],
+			"platformId": "linux-x64"
+		}
 	]
 }

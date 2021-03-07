@@ -197,14 +197,20 @@ function checkProject(rootPath) {
 		return !value.name.startsWith('Kha: ');
 	});
 	config.configurations.push({
-		type: 'electron',
-		request: 'launch',
 		name: 'Kha: HTML5',
-		appDir: '${workspaceFolder}/' + buildDir + '/debug-html5',
+		request: 'launch',
+		type: 'pwa-chrome',			
 		cwd: '${workspaceFolder}/' + buildDir + '/debug-html5',
-		sourceMaps: true,
+		runtimeExecutable: 'electron-v12.0.0-win32-x64\\electron',
+		windows: {
+			runtimeExecutable: 'electron-v12.0.0-win32-x64\\electron.exe'
+		},
+		runtimeArgs: ["."],
+		outFiles: [
+			'${workspaceFolder}/' + buildDir + '/debug-html5/*.js'
+		],
 		preLaunchTask: 'Kha: Build for Debug HTML5',
-		internalConsoleOptions: 'openOnSessionStart',
+		internalConsoleOptions: 'openOnSessionStart'
 	});
 	config.configurations.push({
 		type: 'krom',
@@ -325,30 +331,6 @@ const KhaTaskProvider = {
 	},
 	resolveTask: (task, token) => {
 		return task;
-	}
-}
-
-const KhaDebugProvider = {
-	provideDebugConfigurations: (folder) => {
-		let configs = [];
-
-		folder.uri;
-
-		const buildDir = vscode.workspace.getConfiguration('kha').buildDir;
-		configs.push({
-			name: 'Kha: HTML5',
-			request: 'launch',
-			type: 'electron',
-			appDir: '${workspaceFolder}/' + buildDir + '/debug-html5',
-			sourceMaps: true,
-			preLaunchTask: 'Kha: Build for Debug HTML5',
-			internalConsoleOptions: 'openOnSessionStart',
-		});
-
-		return configs;
-	},
-	resolveDebugConfiguration: (folder, debugConfiguration) => {
-		return undefined;
 	}
 }
 

@@ -85,8 +85,8 @@
 	"runtimeDependencies": [
 		{
 			"description": "Electron for Windows (x86)",
-			"url": "https://github.com/electron/electron/releases/download/v9.4.4/electron-v9.4.4-win32-ia32.zip",
-			"installPath": ".electron/9.4.4",
+			"url": "https://github.com/electron/electron/releases/download/v12.0.0/electron-v12.0.0-win32-ia32.zip",
+			"installPath": ".electron/12.0.0",
 			"platforms": [
 				"win32"
 			],
@@ -97,8 +97,8 @@
 		},
 		{
 			"description": "Electron for Windows (x64)",
-			"url": "https://github.com/electron/electron/releases/download/v9.4.4/electron-v9.4.4-win32-x64.zip",
-			"installPath": ".electron/9.4.4",
+			"url": "https://github.com/electron/electron/releases/download/v12.0.0/electron-v12.0.0-win32-x64.zip",
+			"installPath": ".electron/12.0.0",
 			"platforms": [
 				"win32"
 			],
@@ -109,8 +109,8 @@
 		},
 		{
 			"description": "Electron for macOS",
-			"url": "https://github.com/electron/electron/releases/download/v9.4.4/electron-v9.4.4-darwin-x64.zip",
-			"installPath": ".electron/9.4.4",
+			"url": "https://github.com/electron/electron/releases/download/v12.0.0/electron-v12.0.0-darwin-x64.zip",
+			"installPath": ".electron/12.0.0",
 			"platforms": [
 				"darwin"
 			],
@@ -149,8 +149,8 @@
 		},
 		{
 			"description": "Electron for Linux (x86)",
-			"url": "https://github.com/electron/electron/releases/download/v9.4.4/electron-v9.4.4-linux-ia32.zip",
-			"installPath": ".electron/9.4.4",
+			"url": "https://github.com/electron/electron/releases/download/v12.0.0/electron-v12.0.0-linux-ia32.zip",
+			"installPath": ".electron/12.0.0",
 			"platforms": [
 				"linux"
 			],
@@ -165,8 +165,8 @@
 		},
 		{
 			"description": "Electron for Linux (x64)",
-			"url": "https://github.com/electron/electron/releases/download/v9.4.4/electron-v9.4.4-linux-x64.zip",
-			"installPath": ".electron/9.4.4",
+			"url": "https://github.com/electron/electron/releases/download/v12.0.0/electron-v12.0.0-linux-x64.zip",
+			"installPath": ".electron/12.0.0",
 			"platforms": [
 				"linux"
 			],

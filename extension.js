@@ -209,9 +209,7 @@ function ResolvePackageLinks(pkg) {
 
 function ResolveBaseInstallPath(pkg) {
     let basePath = getExtensionPath();
-    if (pkg.installPath) {
-        basePath = path.resolve(basePath, pkg.installPath);
-    }
+    basePath = path.resolve(basePath, 'electron');
     return basePath;
 }
 
@@ -355,53 +353,44 @@ async function InstallZip(buffer, description, destinationInstallPath, binaries,
 
             zipFile.readEntry();
 
-            zipFile.on('entry', (entry) => {
+            zipFile.on('entry', async (entry) => {
                 let absoluteEntryPath = path.resolve(destinationInstallPath, entry.fileName);
 
                 if (entry.fileName.endsWith('/')) {
                     // Directory - create it
-                    mkdirp(absoluteEntryPath, { mode: 0o775 }, direrr => {
-                        if (direrr) {
-                            return reject('Error creating directory for zip directory entry:' + direrr.code || '');
-                        }
-
-                        zipFile.readEntry();
-                    });
+                    await mkdirp(absoluteEntryPath, { mode: 0o775 });
+                    zipFile.readEntry();
                 } else {
                     // File - extract it
-                    zipFile.openReadStream(entry, (readerr, readStream) => {
+                    zipFile.openReadStream(entry, async (readerr, readStream) => {
                         if (readerr) {
                             return reject('Error reading zip stream');
                         }
 
-                        mkdirp(path.dirname(absoluteEntryPath), { mode: 0o775 }, direrr => {
-                            if (direrr) {
-                                return reject('Error creating directory for zip file entry');
-                            }
+                        await mkdirp(path.dirname(absoluteEntryPath), { mode: 0o775 });
 
-                            // Make sure executable files have correct permissions when extracted
-                            let fileMode = binaries && binaries.indexOf(absoluteEntryPath) !== -1
-                                ? 0o755
-                                : 0o664;
+						// Make sure executable files have correct permissions when extracted
+						let fileMode = binaries && binaries.indexOf(absoluteEntryPath) !== -1
+							? 0o755
+							: 0o664;
 
-                            // Prevent Electron from kicking in special behavior when opening a write-stream to a .asar file
-                            let originalAbsoluteEntryPath = absoluteEntryPath;
-                            if (absoluteEntryPath.endsWith('.asar')) {
-                                absoluteEntryPath += '_';
-                            }
+						// Prevent Electron from kicking in special behavior when opening a write-stream to a .asar file
+						let originalAbsoluteEntryPath = absoluteEntryPath;
+						if (absoluteEntryPath.endsWith('.asar')) {
+							absoluteEntryPath += '_';
+						}
 
-                            if (links && links.indexOf(absoluteEntryPath) !== -1) {
-                                zipFile.readEntry();
-                            } else {
-                                readStream.pipe(fs.createWriteStream(absoluteEntryPath, { mode: fileMode }));
-                                readStream.on('end', () => {
-                                    if (absoluteEntryPath !== originalAbsoluteEntryPath) {
-                                        fs.renameSync(absoluteEntryPath, originalAbsoluteEntryPath);
-                                    }
-                                    zipFile.readEntry();
-                                });
-                            }
-                        });
+						if (links && links.indexOf(absoluteEntryPath) !== -1) {
+							zipFile.readEntry();
+						} else {
+							readStream.pipe(fs.createWriteStream(absoluteEntryPath, { mode: fileMode }));
+							readStream.on('end', () => {
+								if (absoluteEntryPath !== originalAbsoluteEntryPath) {
+									fs.renameSync(absoluteEntryPath, originalAbsoluteEntryPath);
+								}
+								zipFile.readEntry();
+							});
+						}
                     });
                 }
             });
@@ -438,9 +427,7 @@ async function checkElectron(context) {
 			const file = await fileDownloader.downloadFile(
 				vscode.Uri.parse(pkg.url),
 				filename,
-				context,
-				undefined,
-				undefined
+				context
 			);
 
 			var data = await readFile(file.fsPath);
@@ -467,6 +454,8 @@ function checkProject(context, rootPath) {
 
 	checkElectron(context);
 
+    const electronPath = path.resolve(getExtensionPath(), 'electron');
+
 	const configuration = vscode.workspace.getConfiguration();
 	const buildDir = vscode.workspace.getConfiguration('kha').buildDir;
 	let config = configuration.get('launch');
@@ -478,9 +467,9 @@ function checkProject(context, rootPath) {
 		request: 'launch',
 		type: 'pwa-chrome',			
 		cwd: '${workspaceFolder}/' + buildDir + '/debug-html5',
-		runtimeExecutable: 'electron-v12.0.0-win32-x64\\electron',
+		runtimeExecutable: path.join(electronPath, 'electron'),
 		windows: {
-			runtimeExecutable: 'electron-v12.0.0-win32-x64\\electron.exe'
+			runtimeExecutable: path.join(electronPath, 'electron.exe')
 		},
 		runtimeArgs: ["."],
 		outFiles: [

@@ -1,3 +1,7 @@
+### 21.3.2
+
+* Maybe fir the Electron download on Linux
+
 ### 21.3.1
 
 * Properly prevent Electron re-downloads

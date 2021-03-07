@@ -1,3 +1,8 @@
+### 21.3.0
+
+* Integrate Electron debugging functionality
+* Update Kha
+
 ### 21.2.0
 
 * Print a warning when fallback Kha is used for compilation

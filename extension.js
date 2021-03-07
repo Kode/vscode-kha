@@ -187,8 +187,8 @@ function getExtensionPath() {
 }
 
 function ResolvePackageTestPath(pkg) {
-    if (pkg.installTestPath) {
-        return path.resolve(getExtensionPath(), pkg.installTestPath);
+    if (pkg.installPath) {
+        return path.resolve(getExtensionPath(), pkg.installPath);
     }
     return null;
 }
@@ -238,12 +238,13 @@ function filterPlatformPackages(packages) {
     }
 }
 
-async function fileExists(filePath) {
+async function directoryExists(filePath) {
     return new Promise((resolve, reject) => {
         fs.stat(filePath, (err, stats) => {
-            if (stats && stats.isFile()) {
+            if (stats && stats.isDirectory()) {
                 resolve(true);
-            } else {
+            }
+			else {
                 resolve(false);
             }
         });
@@ -259,7 +260,7 @@ async function filterAlreadyInstalledPackages(packages) {
 			continue;
 		}
 
-		if (!(await fileExists(testPath))) {
+		if (!(await directoryExists(testPath))) {
 			filtered.push(pkg);
 		}
 	}
@@ -437,6 +438,7 @@ async function checkElectron(context) {
 			await fileDownloader.deleteAllItems(context);
 
 			message.dispose();
+			vscode.window.showInformationMessage('Finished downloading Electron.');
 		}
 	}
 }

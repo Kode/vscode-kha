@@ -1,3 +1,8 @@
+### 21.3.1
+
+* Properly prevent Electron re-downloads
+* Update Kha
+
 ### 21.3.0
 
 * Integrate Electron debugging functionality

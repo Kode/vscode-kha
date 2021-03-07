@@ -80,7 +80,8 @@
 		"vscode": "^1.1.36"
 	},
 	"extensionDependencies": [
-		"nadako.vshaxe"
+		"nadako.vshaxe",
+		"mindaro-dev.file-downloader"
 	],
 	"runtimeDependencies": [
 		{
@@ -103,7 +104,7 @@
 				"win32"
 			],
 			"architectures": [
-				"x86_64"
+				"x64"
 			],
 			"platformId": "win-x64"
 		},
@@ -178,5 +179,10 @@
 			],
 			"platformId": "linux-x64"
 		}
-	]
+	],
+	"dependencies": {
+		"@microsoft/vscode-file-downloader-api": "^1.0.1",
+		"mkdirp": "^1.0.4",
+		"yauzl": "^2.10.0"
+	}
 }

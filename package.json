@@ -156,9 +156,7 @@
 				"i686"
 			],
 			"binaries": [
-				"./electron"
-			],
-			"fancyBinaries": [
+				"./electron",
 				"./chrome-sandbox"
 			],
 			"platformId": "linux-x86"
@@ -173,9 +171,7 @@
 				"x64"
 			],
 			"binaries": [
-				"./electron"
-			],
-			"fancyBinaries": [
+				"./electron",
 				"./chrome-sandbox"
 			],
 			"platformId": "linux-x64"

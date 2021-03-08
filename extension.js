@@ -200,13 +200,6 @@ function ResolvePackageBinaries(pkg) {
     return null;
 }
 
-function ResolvePackageFancyBinaries(pkg) {
-    if (pkg.fancyBinaries) {
-        return pkg.fancyBinaries.map(value => path.resolve(ResolveBaseInstallPath(pkg), value));
-    }
-    return null;
-}
-
 function ResolvePackageLinks(pkg) {
     if (pkg.links) {
         return pkg.links.map(value => path.resolve(ResolveBaseInstallPath(pkg), value));
@@ -224,7 +217,6 @@ function ResolveFilePaths(pkg) {
     pkg.installTestPath = ResolvePackageTestPath(pkg);
     pkg.installPath = ResolveBaseInstallPath(pkg);
     pkg.binaries = ResolvePackageBinaries(pkg);
-	pkg.fancyBinaries = ResolvePackageFancyBinaries(pkg);
     pkg.links = ResolvePackageLinks(pkg);
 }
 
@@ -352,7 +344,7 @@ async function InstallZipSymLinks(buffer, destinationInstallPath, links) {
     });
 }
 
-async function InstallZip(buffer, description, destinationInstallPath, binaries, fancyBinaries, links) {
+async function InstallZip(buffer, description, destinationInstallPath, binaries, links) {
     return new Promise((resolve, reject) => {
         yauzl.fromBuffer(buffer, { lazyEntries: true }, (err, zipFile) => {
             if (err) {
@@ -369,8 +361,7 @@ async function InstallZip(buffer, description, destinationInstallPath, binaries,
                     // Directory - create it
                     await mkdirp(absoluteEntryPath, { mode: 0o775 });
                     zipFile.readEntry();
-                }
-				else {
+                } else {
                     // File - extract it
                     zipFile.openReadStream(entry, async (readerr, readStream) => {
                         if (readerr) {
@@ -380,14 +371,9 @@ async function InstallZip(buffer, description, destinationInstallPath, binaries,
                         await mkdirp(path.dirname(absoluteEntryPath), { mode: 0o775 });
 
 						// Make sure executable files have correct permissions when extracted
-						let fancy = false;
 						let fileMode = binaries && binaries.indexOf(absoluteEntryPath) !== -1
 							? 0o755
 							: 0o664;
-						if (fancyBinaries && fancyBinaries.indexOf(absoluteEntryPath) !== -1) {
-							fileMode = 0o4755;
-							fancy = true;
-						}
 
 						// Prevent Electron from kicking in special behavior when opening a write-stream to a .asar file
 						let originalAbsoluteEntryPath = absoluteEntryPath;
@@ -397,13 +383,9 @@ async function InstallZip(buffer, description, destinationInstallPath, binaries,
 
 						if (links && links.indexOf(absoluteEntryPath) !== -1) {
 							zipFile.readEntry();
-						}
-						else {
+						} else {
 							readStream.pipe(fs.createWriteStream(absoluteEntryPath, { mode: fileMode }));
 							readStream.on('end', () => {
-								if (fancy) {
-									fs.chownSync(absoluteEntryPath, 0, 0);
-								}
 								if (absoluteEntryPath !== originalAbsoluteEntryPath) {
 									fs.renameSync(absoluteEntryPath, originalAbsoluteEntryPath);
 								}
@@ -451,7 +433,7 @@ async function checkElectron(context) {
 
 			var data = await readFile(file.fsPath);
 
-			await InstallZip(data, pkg.description, pkg.installPath, pkg.binaries, pkg.fancyBinaries, pkg.links);
+			await InstallZip(data, pkg.description, pkg.installPath, pkg.binaries, pkg.links);
 
 			await fileDownloader.deleteAllItems(context);
 

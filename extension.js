@@ -464,15 +464,24 @@ function checkProject(context, rootPath) {
 	config.configurations = config.configurations.filter((value) => {
 		return !value.name.startsWith('Kha: ');
 	});
+
+	let exec;
+	if (os.platform() === 'win32') {
+		exec = path.join(electronPath, 'electron.exe');
+	}
+	else if (os.platform() === 'darwin') {
+		exec = path.join(electronPath, 'Electron.app', 'Contents', 'MacOS', 'Electron');
+	}
+	else {
+		exec = path.join(electronPath, 'electron');
+	}
+
 	config.configurations.push({
 		name: 'Kha: HTML5',
 		request: 'launch',
 		type: 'pwa-chrome',			
 		cwd: '${workspaceFolder}/' + buildDir + '/debug-html5',
-		runtimeExecutable: path.join(electronPath, 'electron'),
-		windows: {
-			runtimeExecutable: path.join(electronPath, 'electron.exe')
-		},
+		runtimeExecutable: exec,
 		runtimeArgs: ["--no-sandbox", "."],
 		outFiles: [
 			'${workspaceFolder}/' + buildDir + '/debug-html5/*.js'

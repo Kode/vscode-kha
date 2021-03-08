@@ -91,7 +91,7 @@
 				"win32"
 			],
 			"architectures": [
-				"x86"
+				"ia32"
 			],
 			"platformId": "win-x86"
 		},
@@ -111,6 +111,9 @@
 			"url": "https://github.com/electron/electron/releases/download/v12.0.0/electron-v12.0.0-darwin-x64.zip",
 			"platforms": [
 				"darwin"
+			],
+			"architectures": [
+				"x64"
 			],
 			"binaries": [
 				"./Electron.app/Contents/MacOS/Electron",
@@ -140,7 +143,46 @@
 				"./Electron.app/Contents/Frameworks/Squirrel.framework/Squirrel",
 				"./Electron.app/Contents/Frameworks/Squirrel.framework/Versions/Current"
 			],
-			"platformId": "osx"
+			"platformId": "osx-x64"
+		},
+		{
+			"description": "Electron for macOS",
+			"url": "https://github.com/electron/electron/releases/download/v12.0.0/electron-v12.0.0-darwin-arm64.zip",
+			"platforms": [
+				"darwin"
+			],
+			"architectures": [
+				"arm64"
+			],
+			"binaries": [
+				"./Electron.app/Contents/MacOS/Electron",
+				"./Electron.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework",
+				"./Electron.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler",
+				"./Electron.app/Contents/Frameworks/Mantle.framework/Versions/A/Mantle",
+				"./Electron.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC",
+				"./Electron.app/Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel",
+				"./Electron.app/Contents/Frameworks/Electron Helper.app/Contents/MacOS/Electron Helper",
+				"./Electron.app/Contents/Frameworks/Electron Helper (GPU).app/Contents/MacOS/Electron Helper (GPU)",
+				"./Electron.app/Contents/Frameworks/Electron Helper (Plugin).app/Contents/MacOS/Electron Helper (Plugin)",
+				"./Electron.app/Contents/Frameworks/Electron Helper (Renderer).app/Contents/MacOS/Electron Helper (Renderer)"
+			],
+			"links": [
+				"./Electron.app/Contents/Frameworks/Electron Framework.framework/Electron Framework",
+				"./Electron.app/Contents/Frameworks/Electron Framework.framework/Helpers",
+				"./Electron.app/Contents/Frameworks/Electron Framework.framework/Libraries",
+				"./Electron.app/Contents/Frameworks/Electron Framework.framework/Resources",
+				"./Electron.app/Contents/Frameworks/Electron Framework.framework/Versions/Current",
+				"./Electron.app/Contents/Frameworks/Mantle.framework/Mantle",
+				"./Electron.app/Contents/Frameworks/Mantle.framework/Resources",
+				"./Electron.app/Contents/Frameworks/Mantle.framework/Versions/Current",
+				"./Electron.app/Contents/Frameworks/ReactiveObjC.framework/ReactiveObjC",
+				"./Electron.app/Contents/Frameworks/ReactiveObjC.framework/Resources",
+				"./Electron.app/Contents/Frameworks/ReactiveObjC.framework/Versions/Current",
+				"./Electron.app/Contents/Frameworks/Squirrel.framework/Resources",
+				"./Electron.app/Contents/Frameworks/Squirrel.framework/Squirrel",
+				"./Electron.app/Contents/Frameworks/Squirrel.framework/Versions/Current"
+			],
+			"platformId": "osx-arm64"
 		},
 		{
 			"description": "Electron for Linux (x86)",
@@ -149,8 +191,7 @@
 				"linux"
 			],
 			"architectures": [
-				"x86",
-				"i686"
+				"ia32"
 			],
 			"binaries": [
 				"./electron",

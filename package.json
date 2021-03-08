@@ -2,7 +2,7 @@
 	"name": "kha",
 	"displayName": "Kha",
 	"description": "Kha support",
-	"version": "21.3.3",
+	"version": "21.3.4",
 	"publisher": "kodetech",
 	"engines": {
 		"vscode": "^1.31.0"
@@ -156,7 +156,9 @@
 				"i686"
 			],
 			"binaries": [
-				"./electron",
+				"./electron"
+			],
+			"fancyBinaries": [
 				"./chrome-sandbox"
 			],
 			"platformId": "linux-x86"
@@ -171,7 +173,9 @@
 				"x64"
 			],
 			"binaries": [
-				"./electron",
+				"./electron"
+			],
+			"fancyBinaries": [
 				"./chrome-sandbox"
 			],
 			"platformId": "linux-x64"

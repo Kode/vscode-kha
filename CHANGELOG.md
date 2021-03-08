@@ -1,6 +1,10 @@
+### 21.3.3
+
+* Maybe fix the Linux chmod situation
+
 ### 21.3.2
 
-* Maybe fir the Electron download on Linux
+* Maybe fix the Electron download on Linux
 
 ### 21.3.1
 

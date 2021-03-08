@@ -1,3 +1,7 @@
+### 21.3.6
+
+* Disable the sandbox because chowning it on Linux requires admin rights
+
 ### 21.3.5
 
 * Fix vscode's auto-import madness

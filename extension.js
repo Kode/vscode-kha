@@ -473,7 +473,7 @@ function checkProject(context, rootPath) {
 		windows: {
 			runtimeExecutable: path.join(electronPath, 'electron.exe')
 		},
-		runtimeArgs: ["."],
+		runtimeArgs: ["--no-sandbox", "."],
 		outFiles: [
 			'${workspaceFolder}/' + buildDir + '/debug-html5/*.js'
 		],

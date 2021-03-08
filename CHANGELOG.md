@@ -1,3 +1,8 @@
+### 21.3.7
+
+* Pimp macOS support
+* Update Kha
+
 ### 21.3.6
 
 * Disable the sandbox because chowning it on Linux requires admin rights

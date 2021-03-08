@@ -7,7 +7,6 @@ const vscode = require('vscode');
 const downloader = require('@microsoft/vscode-file-downloader-api');
 const mkdirp = require('mkdirp');
 const yauzl = require('yauzl');
-const { chownSync } = require('node:fs');
 
 let channel = null;
 

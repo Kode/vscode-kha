@@ -1,3 +1,7 @@
+### 21.3.5
+
+* Fix vscode's auto-import madness
+
 ### 21.3.4
 
 * Maybe fix the Linux chown situation

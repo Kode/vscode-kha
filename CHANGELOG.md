@@ -1,5 +1,10 @@
 ### 21.3.7
 
+* Make things work with vshaxe 2.23.0
+* Update Kha
+
+### 21.3.7
+
 * Pimp macOS support
 * Update Kha
 

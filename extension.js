@@ -91,6 +91,18 @@ function compile(target, silent) {
 	});
 }
 
+let KhaHaxeInstallationProvider = {
+	activate: (provideInstallation) => {
+		provideInstallation({
+			haxeExecutable: path.join(findKha(), 'Tools', 'haxe', 'haxe' + sys()),
+			haxelibExecutable: null,
+			standardLibraryPath: path.join(findKha(), 'Tools', 'haxe', 'std')
+		});
+	},
+
+	deactivate: () => {}
+}
+
 let KhaDisplayArgumentsProvider = {
 	init: (api, activationChangedCallback) => {
 		this.api = api;
@@ -139,15 +151,6 @@ function sys() {
 	}
 }
 
-function updateHaxe(vshaxe) {
-	vshaxe.haxeExecutable.configuration.executable = path.join(findKha(), 'Tools', 'haxe', 'haxe' + sys());
-	vshaxe.haxeExecutable.configuration.isCommand = false;
-	vshaxe.haxeExecutable.configuration.env = {
-		'HAXE_STD_PATH': path.join(findKha(), 'Tools', 'haxe', 'std')
-	};
-	vshaxe.haxeExecutable._onDidChangeConfiguration.fire(vshaxe.haxeExecutable.configuration);
-}
-
 function configureVsHaxe(rootPath) {
 	let vshaxe = vscode.extensions.getExtension('nadako.vshaxe').exports;
 	KhaDisplayArgumentsProvider.init(vshaxe, (active) => {
@@ -155,17 +158,15 @@ function configureVsHaxe(rootPath) {
 
 		const hxmlPath = path.join(rootPath, 'build', 'project-debug-html5.hxml');
 		if (fs.existsSync(hxmlPath)) {
-			updateHaxe(vshaxe);
 			updateHaxeArguments(rootPath, hxmlPath);
 		}
 		else {
 			compile('debug-html5', true).then(() => {
-				updateHaxe(vshaxe);
 				updateHaxeArguments(rootPath, hxmlPath);
 			});
 		}
 	});
-	updateHaxe(vshaxe);
+	vshaxe.registerHaxeInstallationProvider('Kha', KhaHaxeInstallationProvider);
 	vshaxe.registerDisplayArgumentsProvider('Kha', KhaDisplayArgumentsProvider);
 }
 

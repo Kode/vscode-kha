@@ -213,10 +213,26 @@
 				"./chrome-sandbox"
 			],
 			"platformId": "linux-x64"
+		},
+		{
+			"description": "Electron for FreeBSD 12.2",
+			"url": "https://github.com/tagattie/FreeBSD-Electron/releases/download/v11.2.3/electron11-11.2.3-freebsd12-amd64.txz",
+			"platforms": [
+				"freebsd"
+			],
+			"architectures": [
+				"x64"
+			],
+			"binaries": [
+				"./usr/local/share/electron11/electron",
+				"./usr/local/share/electron11/chromedriver"
+			],
+			"platformId": "linux-x64"
 		}
 	],
 	"dependencies": {
 		"@microsoft/vscode-file-downloader-api": "^1.0.1",
+		"child_process": "^1.0.2",
 		"mkdirp": "^1.0.4",
 		"yauzl": "^2.10.0"
 	}

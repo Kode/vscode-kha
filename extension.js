@@ -7,6 +7,7 @@ const vscode = require('vscode');
 const downloader = require('@microsoft/vscode-file-downloader-api');
 const mkdirp = require('mkdirp');
 const yauzl = require('yauzl');
+const { exec } = require('child_process');
 
 let channel = null;
 
@@ -145,6 +146,9 @@ function sys() {
 	}
 	else if (os.platform() === 'win32') {
 		return '.exe';
+	}
+	else if (os.platform() === 'freebsd') {
+		return '-freebsd';
 	}
 	else {
 		return '-osx';
@@ -412,6 +416,34 @@ async function InstallZip(buffer, description, destinationInstallPath, binaries,
     });
 }
 
+async function InstallFreeBSD(fsPath, description, destinationInstallPath, binaries, links) {
+    return new Promise((resolve, reject) => {
+		fs.mkdtemp(path.join(os.tmpdir(), 'electron-'), (err, folder) => {
+			if (err) {
+				let message = 'Unable to create temporary directory: ' + err;
+				reject(message);
+			}
+
+			mkdirp(folder, { mode: 0o775 });
+
+			exec('tar xf "' + fsPath + '" -C ' + folder, (err, stdout, stderr) => {
+				if (err) {
+					let message = 'Unable to extract tarball: ' + err + '\n' + stdout + '\n' + stderr;
+					reject(message);
+				} else {
+					exec('cp -r "' + path.join(folder, 'usr/local/share/electron11') + '" "' + destinationInstallPath + '"', (err, stdout, stderr) => {
+					if (err) {
+							let message = 'Copy failed: ' + err + '\nSTDOUT:\n' + stdout + '\nSTDERR:\n' + stderr;
+							reject(message);
+						}
+					});
+				}
+			});
+		});
+		resolve();
+    });
+}
+
 async function checkElectron(context) {
 	const json = vscode.extensions.getExtension('kodetech.kha').packageJSON;
 	const dependencies = json.runtimeDependencies;
@@ -424,7 +456,7 @@ async function checkElectron(context) {
 
 			const fileDownloader = await downloader.getApi();
 
-			const filename = 'electron.zip';
+			const filename = os.platform() !== 'freebsd' ? 'electron.zip' : 'electron.txz';
 
 			const file = await fileDownloader.downloadFile(
 				vscode.Uri.parse(pkg.url),
@@ -432,9 +464,15 @@ async function checkElectron(context) {
 				context
 			);
 
-			var data = await readFile(file.fsPath);
+			if (os.platform() !== 'freebsd') {
+				var data = await readFile(file.fsPath);
 
-			await InstallZip(data, pkg.description, pkg.installPath, pkg.binaries, pkg.links);
+				await InstallZip(data, pkg.description, pkg.installPath, pkg.binaries, pkg.links);
+
+
+			} else {
+				await InstallFreeBSD(file.fsPath, pkg.description, pkg.installPath, pkg.binaries, pkg.links);
+			}
 
 			await fileDownloader.deleteAllItems(context);
 
@@ -480,7 +518,7 @@ function checkProject(context, rootPath) {
 	config.configurations.push({
 		name: 'Kha: HTML5',
 		request: 'launch',
-		type: 'pwa-chrome',			
+		type: 'pwa-chrome',
 		cwd: '${workspaceFolder}/' + buildDir + '/debug-html5',
 		runtimeExecutable: exec,
 		runtimeArgs: ["--no-sandbox", "."],
@@ -550,7 +588,11 @@ const KhaTaskProvider = {
 			{ arg: 'wpf', name: 'WPF', default: false },
 			{ arg: 'ps4', name: 'PlayStation 4', default: false },
 			{ arg: 'xboxone', name: 'Xbox One', default: false },
-			{ arg: 'switch', name: 'Switch', default: false }
+			{ arg: 'switch', name: 'Switch', default: false },
+			{ arg: 'freebsd', name: 'FreeBSD', default: false },
+			{ arg: 'freebsd', name: 'FreeBSD (full build)', default: false, full: true },
+			{ arg: 'freebsd', name: 'FreeBSD (Vulkan)', default: false, graphics: 'vulkan' },
+			{ arg: 'freebsd', name: 'FreeBSD (Vulkan, full build)', default: false, full: true, graphics: 'vulkan' },
 		];
 
 		let tasks = [];

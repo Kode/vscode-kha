@@ -1,4 +1,9 @@
-### 21.3.7
+### 21.4.0
+* Add support for FreeBSD
+* Stop chmodding kravur
+* Update Kha
+
+### 21.3.8
 
 * Make things work with vshaxe 2.23.0
 * Update Kha

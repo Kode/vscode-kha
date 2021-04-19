@@ -180,7 +180,6 @@ function chmodEverything() {
 	}
 	const base = findKha();
 	fs.chmodSync(path.join(base, 'Tools', 'haxe', 'haxe' + sys()), 0o755);
-	fs.chmodSync(path.join(base, 'Tools', 'kravur', 'kravur' + sys()), 0o755);
 	fs.chmodSync(path.join(base, 'Tools', 'lame', 'lame' + sys()), 0o755);
 	fs.chmodSync(path.join(base, 'Tools', 'oggenc', 'oggenc' + sys()), 0o755);
 	fs.chmodSync(path.join(base, 'Kinc', 'Tools', 'kraffiti', 'kraffiti' + sys()), 0o755);

@@ -215,6 +215,36 @@
 			"platformId": "linux-x64"
 		},
 		{
+			"description": "Electron for Linux (armv7)",
+			"url": "https://github.com/electron/electron/releases/download/v12.0.6/electron-v12.0.6-linux-armv7l.zip",
+			"platforms": [
+				"linux"
+			],
+			"architectures": [
+				"arm"
+			],
+			"binaries": [
+				"./electron",
+				"./chrome-sandbox"
+			],
+			"platformId": "linux-arm"
+		},
+		{
+			"description": "Electron for Linux (aarch64)",
+			"url": "https://github.com/electron/electron/releases/download/v12.0.6/electron-v12.0.6-linux-arm64.zip",
+			"platforms": [
+				"linux"
+			],
+			"architectures": [
+				"arm64"
+			],
+			"binaries": [
+				"./electron",
+				"./chrome-sandbox"
+			],
+			"platformId": "linux-arm64"
+		},
+		{
 			"description": "Electron for FreeBSD 12.2",
 			"url": "https://github.com/tagattie/FreeBSD-Electron/releases/download/v11.2.3/electron11-11.2.3-freebsd12-amd64.txz",
 			"platforms": [
@@ -227,7 +257,7 @@
 				"./usr/local/share/electron11/electron",
 				"./usr/local/share/electron11/chromedriver"
 			],
-			"platformId": "linux-x64"
+			"platformId": "freebsd"
 		}
 	],
 	"dependencies": {

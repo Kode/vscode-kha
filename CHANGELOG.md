@@ -1,3 +1,8 @@
+### 21.5.0
+
+* Add support for Linux/ARM
+* Update Kha
+
 ### 21.4.0
 * Add support for FreeBSD
 * Stop chmodding kravur

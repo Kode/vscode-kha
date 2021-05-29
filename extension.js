@@ -29,6 +29,23 @@ function findFFMPEG() {
 	return vscode.workspace.getConfiguration('kha').ffmpeg;
 }
 
+function findKhaElectron() {
+	const electronPath = path.resolve(getExtensionPath(), 'electron');
+
+	let exec;
+	if (os.platform() === 'win32') {
+		exec = path.join(electronPath, 'electron.exe');
+	}
+	else if (os.platform() === 'darwin') {
+		exec = path.join(electronPath, 'Electron.app', 'Contents', 'MacOS', 'Electron');
+	}
+	else {
+		exec = path.join(electronPath, 'electron');
+	}
+
+	return exec;
+}
+
 function compile(target, silent) {
 	if (!silent) {
 		channel.appendLine('Saving all files.');
@@ -495,8 +512,6 @@ function checkProject(context, rootPath) {
 
 	checkElectron(context);
 
-    const electronPath = path.resolve(getExtensionPath(), 'electron');
-
 	const configuration = vscode.workspace.getConfiguration();
 	const buildDir = vscode.workspace.getConfiguration('kha').buildDir;
 	let config = configuration.get('launch');
@@ -504,23 +519,12 @@ function checkProject(context, rootPath) {
 		return !value.name.startsWith('Kha: ');
 	});
 
-	let exec;
-	if (os.platform() === 'win32') {
-		exec = path.join(electronPath, 'electron.exe');
-	}
-	else if (os.platform() === 'darwin') {
-		exec = path.join(electronPath, 'Electron.app', 'Contents', 'MacOS', 'Electron');
-	}
-	else {
-		exec = path.join(electronPath, 'electron');
-	}
-
 	config.configurations.push({
 		name: 'Kha: HTML5',
 		request: 'launch',
 		type: 'pwa-chrome',
 		cwd: '${workspaceFolder}/' + buildDir + '/debug-html5',
-		runtimeExecutable: exec,
+		runtimeExecutable: '${command:kha.findKhaElectron}',
 		runtimeArgs: ["--no-sandbox", "."],
 		outFiles: [
 			'${workspaceFolder}/' + buildDir + '/debug-html5/*.js'
@@ -708,6 +712,12 @@ exports.activate = (context) => {
 
 	context.subscriptions.push(disposable);
 
+	disposable = vscode.commands.registerCommand('kha.findKhaElectron', () => {
+		return findKhaElectron();
+	});
+
+	context.subscriptions.push(disposable);
+
 	const targetItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 	targetItem.text = '$(desktop-download) HTML5';
 	targetItem.tooltip = 'Select Completion Target';
@@ -777,6 +787,7 @@ exports.activate = (context) => {
 	let api = {
 		findKha: findKha,
 		findFFMPEG: findFFMPEG,
+		findKhaElectron: findKhaElectron,
 		compile: compile
 	};
 

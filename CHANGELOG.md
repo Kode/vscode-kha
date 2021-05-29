@@ -1,3 +1,8 @@
+### 21.5.1
+
+* Write system-independent launch-configs
+* Update Kha
+
 ### 21.5.0
 
 * Add support for Linux/ARM

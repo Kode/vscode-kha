@@ -1,3 +1,7 @@
+### 21.6.0
+
+* Update Kha
+
 ### 21.5.1
 
 * Write system-independent launch-configs

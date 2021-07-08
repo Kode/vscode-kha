@@ -1,3 +1,8 @@
+### 21.7.0
+
+* Stop stopping on node-internal exceptions
+* Update Kha
+
 ### 21.6.0
 
 * Update Kha

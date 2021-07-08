@@ -522,7 +522,7 @@ function checkProject(context, rootPath) {
 	config.configurations.push({
 		name: 'Kha: HTML5',
 		request: 'launch',
-		type: 'pwa-chrome',
+		type: 'node',
 		cwd: '${workspaceFolder}/' + buildDir + '/debug-html5',
 		runtimeExecutable: '${command:kha.findKhaElectron}',
 		runtimeArgs: ["--no-sandbox", "."],
@@ -530,7 +530,10 @@ function checkProject(context, rootPath) {
 			'${workspaceFolder}/' + buildDir + '/debug-html5/*.js'
 		],
 		preLaunchTask: 'Kha: Build for Debug HTML5',
-		internalConsoleOptions: 'openOnSessionStart'
+		internalConsoleOptions: 'openOnSessionStart',
+		skipFiles: [
+			"<node_internals>/**"
+		]
 	});
 	config.configurations.push({
 		type: 'krom',

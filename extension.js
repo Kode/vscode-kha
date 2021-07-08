@@ -522,7 +522,7 @@ function checkProject(context, rootPath) {
 	config.configurations.push({
 		name: 'Kha: HTML5',
 		request: 'launch',
-		type: 'node',
+		type: 'pwa-chrome',
 		cwd: '${workspaceFolder}/' + buildDir + '/debug-html5',
 		runtimeExecutable: '${command:kha.findKhaElectron}',
 		runtimeArgs: ["--no-sandbox", "."],

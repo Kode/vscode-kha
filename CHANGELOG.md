@@ -1,3 +1,8 @@
+### 21.7.2
+
+* Use force-device-scale-factor=1 for Electron
+* Update Kha
+
 ### 21.7.1
 
 * Update Kha

@@ -525,7 +525,7 @@ function checkProject(context, rootPath) {
 		type: 'pwa-chrome',
 		cwd: '${workspaceFolder}/' + buildDir + '/debug-html5',
 		runtimeExecutable: '${command:kha.findKhaElectron}',
-		runtimeArgs: ["--no-sandbox", "."],
+		runtimeArgs: ["--no-sandbox", "--force-device-scale-factor=1", "."],
 		outFiles: [
 			'${workspaceFolder}/' + buildDir + '/debug-html5/*.js'
 		],

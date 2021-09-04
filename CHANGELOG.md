@@ -1,3 +1,8 @@
+### 21.9.0
+
+* Update Electron for Windows
+* Update Kha
+
 ### 21.7.2
 
 * Use force-device-scale-factor=1 for Electron

@@ -86,7 +86,7 @@
 	"runtimeDependencies": [
 		{
 			"description": "Electron for Windows (x86)",
-			"url": "https://github.com/electron/electron/releases/download/v12.0.0/electron-v12.0.0-win32-ia32.zip",
+			"url": "https://github.com/electron/electron/releases/download/v14.0.0/electron-v14.0.0-win32-ia32.zip",
 			"platforms": [
 				"win32"
 			],
@@ -97,7 +97,7 @@
 		},
 		{
 			"description": "Electron for Windows (x64)",
-			"url": "https://github.com/electron/electron/releases/download/v12.0.0/electron-v12.0.0-win32-x64.zip",
+			"url": "https://github.com/electron/electron/releases/download/v14.0.0/electron-v14.0.0-win32-x64.zip",
 			"platforms": [
 				"win32"
 			],

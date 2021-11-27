@@ -1,3 +1,7 @@
+### 21.11.0
+
+* Update Kha
+
 ### 21.9.0
 
 * Update Electron for Windows

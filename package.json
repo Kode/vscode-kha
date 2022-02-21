@@ -5,7 +5,7 @@
 	"version": "22.2.0",
 	"publisher": "kodetech",
 	"engines": {
-		"vscode": "^1.31.0"
+		"vscode": "^1.64.0"
 	},
 	"categories": [
 		"Other"
@@ -79,17 +79,6 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/Kode/vscode-kha"
-	},
-	"scripts": {
-		"postinstall": "node ./node_modules/vscode/bin/install",
-		"test": "node ./node_modules/vscode/bin/test"
-	},
-	"devDependencies": {
-		"@types/mocha": "^2.2.42",
-		"@types/node": "^7.0.43",
-		"eslint": "^4.11.0",
-		"typescript": "^2.6.1",
-		"vscode": "^1.1.36"
 	},
 	"extensionDependencies": [
 		"nadako.vshaxe",
@@ -272,10 +261,22 @@
 			"platformId": "freebsd"
 		}
 	],
+	"scripts": {
+		"lint": "eslint .",
+		"pretest": "npm run lint",
+		"test": "node ./test/runTest.js"
+	},
 	"dependencies": {
 		"@microsoft/vscode-file-downloader-api": "^1.0.1",
 		"child_process": "^1.0.2",
 		"mkdirp": "^1.0.4",
 		"yauzl": "^2.10.0"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.64.0",
+		"@types/node": "14.x",
+		"eslint": "^8.6.0",
+		"typescript": "^4.5.4",
+		"@vscode/test-electron": "^2.0.3"
 	}
 }

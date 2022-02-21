@@ -17,7 +17,9 @@
 	"activationEvents": [
 		"workspaceContains:khafile.js",
 		"onCommand:kha.init",
-		"onCommand:kha.compile"
+		"onCommand:kha.compile",
+		"onCommand:kha.findKha",
+		"onCommand:kha.findKhaElectron"
 	],
 	"main": "./extension",
 	"contributes": {
@@ -25,6 +27,16 @@
 			{
 				"command": "kha.init",
 				"title": "Init Project",
+				"category": "Kha"
+			},
+			{
+				"command": "kha.findKha",
+				"title": "Locate Kha folder",
+				"category": "Kha"
+			},
+			{
+				"command": "kha.findKhaElectron",
+				"title": "Locate the downloaded electron executable",
 				"category": "Kha"
 			}
 		],

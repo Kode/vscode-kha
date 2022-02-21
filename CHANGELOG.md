@@ -1,3 +1,8 @@
+### 22.2.0
+
+* Expose more extension-functions
+* Update Kha
+
 ### 21.11.0
 
 * Update Kha

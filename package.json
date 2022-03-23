@@ -58,6 +58,14 @@
 					"type": "string",
 					"default": "build",
 					"description": "Relative path to the Kha build dir for the project."
+				},
+				"kha.defaultTarget": {
+					"type": "string",
+					"description": "Default completion and build target.",
+					"default": "HTML5 (Electron)",
+					"enum": [
+						"HTML5 (Electron)", "HTML5 (Web)", "Krom", "Kinc", "Android (Java)", "Flash", "HTML5-Worker", "Java", "Node.js", "Unity", "WPF"
+					]
 				}
 			}
 		},

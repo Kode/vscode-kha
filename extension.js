@@ -25,6 +25,10 @@ function findKha(channel) {
 	return path.join(vscode.extensions.getExtension('kodetech.kha').extensionPath, 'Kha');
 }
 
+function findDefaultTarget() {
+	return vscode.workspace.getConfiguration('kha').defaultTarget;
+}
+
 function findFFMPEG() {
 	return vscode.workspace.getConfiguration('kha').ffmpeg;
 }
@@ -698,7 +702,7 @@ const KhaTaskProvider = {
 	}
 }
 
-let currentTarget = 'HTML5 (Electron)';
+let currentTarget = findDefaultTarget();
 
 exports.activate = (context) => {
 	channel = vscode.window.createOutputChannel('Kha');
@@ -759,7 +763,7 @@ exports.activate = (context) => {
 	context.subscriptions.push(disposable);
 
 	const targetItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-	targetItem.text = '$(desktop-download) HTML5';
+	targetItem.text = `$(desktop-download) ${currentTarget}`;
 	targetItem.tooltip = 'Select Completion Target';
 	targetItem.command = 'kha.selectCompletionTarget';
 	targetItem.show();
@@ -794,6 +798,7 @@ exports.activate = (context) => {
 		findKha: findKha,
 		findFFMPEG: findFFMPEG,
 		findKhaElectron: findKhaElectron,
+		findDefaultTarget: findDefaultTarget,
 		compile: compile
 	};
 

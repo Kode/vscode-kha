@@ -173,17 +173,54 @@ function sys() {
 	}
 }
 
+function choiceToHxml(choice) {
+	switch (choice) {
+		case 'HTML5 (Electron)':
+			return 'debug-html5';
+		case 'HTML5 (Web)':
+			return 'html5';
+		case 'Krom':
+			return 'krom';
+		case 'Kinc':
+			switch (process.platform) {
+				case 'win32':
+					return 'windows';
+				case 'darwin':
+					return 'osx';
+				case 'linux':
+					return 'linux';
+				default:
+					return process.platform;
+			}
+		case 'Android (Java)':
+			return 'android';
+		case 'Flash':
+			return 'flash';
+		case 'HTML5-Worker':
+			return 'html5worker';
+		case 'Java':
+			return 'java';
+		case 'Node.js':
+			return 'node';
+		case 'Unity':
+			return 'unity';
+		case 'WPF':
+			return 'wpf';
+	}
+}
+
 function configureVsHaxe(rootPath) {
 	let vshaxe = vscode.extensions.getExtension('nadako.vshaxe').exports;
 	KhaDisplayArgumentsProvider.init(vshaxe, (active) => {
 		if (!active) return;
 
-		const hxmlPath = path.join(rootPath, 'build', 'project-debug-html5.hxml');
+		const hxmlId = choiceToHxml(currentTarget);
+		const hxmlPath = path.join(rootPath, 'build', `project-${hxmlId}.hxml`);
 		if (fs.existsSync(hxmlPath)) {
 			updateHaxeArguments(rootPath, hxmlPath);
 		}
 		else {
-			compile('debug-html5', true).then(() => {
+			compile(hxmlId, true).then(() => {
 				updateHaxeArguments(rootPath, hxmlPath);
 			});
 		}
@@ -661,7 +698,7 @@ const KhaTaskProvider = {
 	}
 }
 
-let currentTarget = 'HTML5';
+let currentTarget = 'HTML5 (Electron)';
 
 exports.activate = (context) => {
 	channel = vscode.window.createOutputChannel('Kha');
@@ -729,7 +766,7 @@ exports.activate = (context) => {
 	context.subscriptions.push(targetItem);
 
 	disposable = vscode.commands.registerCommand("kha.selectCompletionTarget", () => {
-		let items = ['HTML5', 'Krom', 'Kinc', 'Android (Java)', 'Flash', 'HTML5-Worker', 'Java', 'Node.js', 'Unity', 'WPF'];
+		let items = ['HTML5 (Electron)', 'HTML5 (Web)', 'Krom', 'Kinc', 'Android (Java)', 'Flash', 'HTML5-Worker', 'Java', 'Node.js', 'Unity', 'WPF'];
 		vscode.window.showQuickPick(items).then((choice) => {
 			if (!choice || choice === currentTarget) {
 				return;
@@ -738,48 +775,14 @@ exports.activate = (context) => {
 			currentTarget = choice;
 			targetItem.text = '$(desktop-download) ' + choice;
 
-			function choiceToHxml() {
-				switch (choice) {
-					case 'HTML5':
-						return 'debug-html5';
-					case 'Krom':
-						return 'krom';
-					case 'Kinc':
-						switch (process.platform) {
-							case 'win32':
-								return 'windows';
-							case 'darwin':
-								return 'osx';
-							case 'linux':
-								return 'linux';
-							default:
-								return process.platform;
-						}
-					case 'Android (Java)':
-						return 'android';
-					case 'Flash':
-						return 'flash';
-					case 'HTML5-Worker':
-						return 'html5worker';
-					case 'Java':
-						return 'java';
-					case 'Node.js':
-						return 'node';
-					case 'Unity':
-						return 'unity';
-					case 'WPF':
-						return 'wpf';
-				}
-			}
-
 			const rootPath = vscode.workspace.rootPath;
 			const buildDir = vscode.workspace.getConfiguration('kha').buildDir;
-			const hxmlPath = path.join(rootPath, buildDir, 'project-' + choiceToHxml() + '.hxml');
+			const hxmlPath = path.join(rootPath, buildDir, 'project-' + choiceToHxml(choice) + '.hxml');
 			if (fs.existsSync(hxmlPath)) {
 				updateHaxeArguments(rootPath, hxmlPath);
 			}
 			else {
-				compile(choiceToHxml(), true).then(() => {
+				compile(choiceToHxml(choice), true).then(() => {
 					updateHaxeArguments(rootPath, hxmlPath);
 				});
 			}

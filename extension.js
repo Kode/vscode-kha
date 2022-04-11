@@ -1,10 +1,11 @@
 'use strict';
 
 const fs = require('fs');
+const http = require('http');
+const https = require('https');
 const os = require('os');
 const path = require('path');
 const vscode = require('vscode');
-const downloader = require('@microsoft/vscode-file-downloader-api');
 const mkdirp = require('mkdirp');
 const yauzl = require('yauzl');
 const { exec } = require('child_process');
@@ -276,6 +277,12 @@ function ResolveBaseInstallPath(pkg) {
     return basePath;
 }
 
+function ResolveDownloadPath(filename) {
+	let basePath = getExtensionPath();
+    basePath = path.resolve(basePath, filename);
+    return basePath;
+}
+
 function ResolveFilePaths(pkg) {
     pkg.installTestPath = ResolvePackageTestPath(pkg);
     pkg.installPath = ResolveBaseInstallPath(pkg);
@@ -424,7 +431,8 @@ async function InstallZip(buffer, description, destinationInstallPath, binaries,
                     // Directory - create it
                     await mkdirp(absoluteEntryPath, { mode: 0o775 });
                     zipFile.readEntry();
-                } else {
+                }
+				else {
                     // File - extract it
                     zipFile.openReadStream(entry, async (readerr, readStream) => {
                         if (readerr) {
@@ -446,7 +454,8 @@ async function InstallZip(buffer, description, destinationInstallPath, binaries,
 
 						if (links && links.indexOf(absoluteEntryPath) !== -1) {
 							zipFile.readEntry();
-						} else {
+						}
+						else {
 							readStream.pipe(fs.createWriteStream(absoluteEntryPath, { mode: fileMode }));
 							readStream.on('end', () => {
 								if (absoluteEntryPath !== originalAbsoluteEntryPath) {
@@ -488,7 +497,8 @@ async function InstallFreeBSD(fsPath, description, destinationInstallPath, binar
 				if (err) {
 					let message = 'Unable to extract tarball: ' + err + '\n' + stdout + '\n' + stderr;
 					reject(message);
-				} else {
+				}
+				else {
 					exec('cp -r "' + path.join(folder, 'usr/local/share/electron11') + '" "' + destinationInstallPath + '"', (err, stdout, stderr) => {
 					if (err) {
 							let message = 'Copy failed: ' + err + '\nSTDOUT:\n' + stdout + '\nSTDERR:\n' + stderr;
@@ -500,6 +510,42 @@ async function InstallFreeBSD(fsPath, description, destinationInstallPath, binar
 		});
 		resolve();
     });
+}
+
+// Based on https://stackoverflow.com/a/62056725
+function downloadFile(url, filepath) {
+	const proto = (url.charAt(4) === 's' ? https : http);
+
+	return new Promise((resolve, reject) => {
+		const request = proto.get(url, response => {
+			if (response.statusCode === 302) {
+				const promise = downloadFile(response.headers['location'], filepath);
+				promise.then(resolve, reject); 
+				return;
+			}
+
+			if (response.statusCode !== 200) {
+				reject(new Error(`Failed to get '${url}' (${response.statusCode})`));
+				return;
+			}
+
+			const file = fs.createWriteStream(filepath);
+
+			file.on('finish', () => resolve());
+
+			file.on('error', err => {
+				fs.unlink(filepath, () => reject(err));
+			});
+
+			response.pipe(file);
+		});
+
+		request.on('error', err => {
+			fs.unlink(filepath, () => reject(err));
+		});
+	
+		request.end();
+	});
 }
 
 async function checkElectron(context) {
@@ -516,27 +562,20 @@ async function checkElectron(context) {
 			let error = null;
 
 			try {
-				const fileDownloader = await downloader.getApi();
-
 				const filename = os.platform() !== 'freebsd' ? 'electron.zip' : 'electron.txz';
+				const filepath = ResolveDownloadPath(filename);
 
-				const file = await fileDownloader.downloadFile(
-					vscode.Uri.parse(pkg.url),
-					filename,
-					context
-				);
+				await downloadFile(pkg.url, filepath);
 
 				if (os.platform() !== 'freebsd') {
-					var data = await readFile(file.fsPath);
-
+					const data = await readFile(filepath);
 					await InstallZip(data, pkg.description, pkg.installPath, pkg.binaries, pkg.links);
-
-
-				} else {
-					await InstallFreeBSD(file.fsPath, pkg.description, pkg.installPath, pkg.binaries, pkg.links);
+				}
+				else {
+					await InstallFreeBSD(filepath, pkg.description, pkg.installPath, pkg.binaries, pkg.links);
 				}
 
-				await fileDownloader.deleteAllItems(context);
+				fs.unlinkSync(filepath);
 
 				success = true;
 			}

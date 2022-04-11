@@ -89,8 +89,7 @@
 		"url": "https://github.com/Kode/vscode-kha"
 	},
 	"extensionDependencies": [
-		"nadako.vshaxe",
-		"mindaro-dev.file-downloader"
+		"nadako.vshaxe"
 	],
 	"runtimeDependencies": [
 		{
@@ -275,7 +274,6 @@
 		"test": "node ./test/runTest.js"
 	},
 	"dependencies": {
-		"@microsoft/vscode-file-downloader-api": "^1.0.1",
 		"child_process": "^1.0.2",
 		"mkdirp": "^1.0.4",
 		"yauzl": "^2.10.0"

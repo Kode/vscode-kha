@@ -512,30 +512,45 @@ async function checkElectron(context) {
 			vscode.window.showInformationMessage('Downloading Electron...');
 			let message = vscode.window.setStatusBarMessage('Downloading Electron...');
 
-			const fileDownloader = await downloader.getApi();
+			let success = false;
+			let error = null;
 
-			const filename = os.platform() !== 'freebsd' ? 'electron.zip' : 'electron.txz';
+			try {
+				const fileDownloader = await downloader.getApi();
 
-			const file = await fileDownloader.downloadFile(
-				vscode.Uri.parse(pkg.url),
-				filename,
-				context
-			);
+				const filename = os.platform() !== 'freebsd' ? 'electron.zip' : 'electron.txz';
 
-			if (os.platform() !== 'freebsd') {
-				var data = await readFile(file.fsPath);
+				const file = await fileDownloader.downloadFile(
+					vscode.Uri.parse(pkg.url),
+					filename,
+					context
+				);
 
-				await InstallZip(data, pkg.description, pkg.installPath, pkg.binaries, pkg.links);
+				if (os.platform() !== 'freebsd') {
+					var data = await readFile(file.fsPath);
+
+					await InstallZip(data, pkg.description, pkg.installPath, pkg.binaries, pkg.links);
 
 
-			} else {
-				await InstallFreeBSD(file.fsPath, pkg.description, pkg.installPath, pkg.binaries, pkg.links);
+				} else {
+					await InstallFreeBSD(file.fsPath, pkg.description, pkg.installPath, pkg.binaries, pkg.links);
+				}
+
+				await fileDownloader.deleteAllItems(context);
+
+				success = true;
+			}
+			catch (err) {
+				error = err;
 			}
 
-			await fileDownloader.deleteAllItems(context);
-
 			message.dispose();
-			vscode.window.showInformationMessage('Finished downloading Electron.');
+			if (success) {
+				vscode.window.showInformationMessage('Finished downloading Electron.');
+			}
+			else {
+				vscode.window.showInformationMessage('Could not download Electron because: ' + error);
+			}
 		}
 	}
 }

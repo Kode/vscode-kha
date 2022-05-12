@@ -116,11 +116,21 @@ function compile(target, silent) {
 
 let KhaHaxeInstallationProvider = {
 	activate: (provideInstallation) => {
-		provideInstallation({
-			haxeExecutable: path.join(findKha(), 'Tools', 'haxe', 'haxe' + sys()),
-			haxelibExecutable: null,
-			standardLibraryPath: path.join(findKha(), 'Tools', 'haxe', 'std')
-		});
+		const khaPath = path.join(findKha(), 'Tools', sysdir(), 'haxe' + sys2());
+		if (fs.existsSync(khaPath)) {
+			provideInstallation({
+				haxeExecutable: khaPath,
+				haxelibExecutable: null,
+				standardLibraryPath: path.join(findKha(), 'Tools', sysdir(), 'std')
+			});
+		}
+		else {
+			provideInstallation({
+				haxeExecutable: path.join(findKha(), 'Tools', 'haxe', 'haxe' + sys()),
+				haxelibExecutable: null,
+				standardLibraryPath: path.join(findKha(), 'Tools', 'haxe', 'std')
+			});
+		}
 	},
 
 	deactivate: () => {}
@@ -175,6 +185,33 @@ function sys() {
 	}
 	else {
 		return '-osx';
+	}
+}
+
+function sys2() {
+	if (os.platform() === 'win32') {
+		return '.exe';
+	}
+	else {
+		return '';
+	}
+}
+
+function sysdir() {
+	if (os.platform() === 'linux') {
+		if (os.arch() === 'arm') return 'linux_arm';
+		if (os.arch() === 'arm64') return 'linux_arm64';
+		else if (os.arch() === 'x64') return 'linux_x64';
+		else throw 'Unsupported CPU';
+	}
+	else if (os.platform() === 'win32') {
+		return 'windows_x64';
+	}
+	else if (os.platform() === 'freebsd') {
+		return 'freebsd_x64';
+	}
+	else {
+		return 'macos';
 	}
 }
 
@@ -239,11 +276,11 @@ function chmodEverything() {
 		return;
 	}
 	const base = findKha();
-	fs.chmodSync(path.join(base, 'Tools', 'haxe', 'haxe' + sys()), 0o755);
-	fs.chmodSync(path.join(base, 'Tools', 'lame', 'lame' + sys()), 0o755);
-	fs.chmodSync(path.join(base, 'Tools', 'oggenc', 'oggenc' + sys()), 0o755);
-	fs.chmodSync(path.join(base, 'Kinc', 'Tools', 'kraffiti', 'kraffiti' + sys()), 0o755);
-	fs.chmodSync(path.join(base, 'Kinc', 'Tools', 'krafix', 'krafix' + sys()), 0o755);
+	fs.chmodSync(path.join(base, 'Tools', sysdir(), 'haxe'), 0o755);
+	fs.chmodSync(path.join(base, 'Tools', sysdir(), 'lame'), 0o755);
+	fs.chmodSync(path.join(base, 'Tools', sysdir(), 'oggenc'), 0o755);
+	fs.chmodSync(path.join(base, 'Kinc', 'Tools', sysdir(), 'kraffiti'), 0o755);
+	fs.chmodSync(path.join(base, 'Kinc', 'Tools', sysdir(), 'krafix'), 0o755);
 }
 
 function getExtensionPath() {

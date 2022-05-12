@@ -1,4 +1,9 @@
-### 22.4,9
+### 22.5.0
+
+* Support the directory-structure of new Kha-revisions
+* Update Kha
+
+### 22.4.0
 
 * Download Electron manually because Microsoft's download-extension broke
 * Update Kha

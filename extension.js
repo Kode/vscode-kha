@@ -8,7 +8,7 @@ const path = require('path');
 const vscode = require('vscode');
 const mkdirp = require('mkdirp');
 const yauzl = require('yauzl');
-const { exec } = require('child_process');
+const child_process = require('child_process');
 
 let channel = null;
 
@@ -530,14 +530,14 @@ async function InstallFreeBSD(fsPath, description, destinationInstallPath, binar
 
 			mkdirp(folder, { mode: 0o775 });
 
-			exec('tar xf "' + fsPath + '" -C ' + folder, (err, stdout, stderr) => {
+			child_process.exec('tar xf "' + fsPath + '" -C ' + folder, (err, stdout, stderr) => {
 				if (err) {
 					let message = 'Unable to extract tarball: ' + err + '\n' + stdout + '\n' + stderr;
 					reject(message);
 				}
 				else {
-					exec('cp -r "' + path.join(folder, 'usr/local/share/electron11') + '" "' + destinationInstallPath + '"', (err, stdout, stderr) => {
-					if (err) {
+					child_process.exec('cp -r "' + path.join(folder, 'usr/local/share/electron11') + '" "' + destinationInstallPath + '"', (err, stdout, stderr) => {
+						if (err) {
 							let message = 'Copy failed: ' + err + '\nSTDOUT:\n' + stdout + '\nSTDERR:\n' + stderr;
 							reject(message);
 						}
@@ -631,6 +631,58 @@ async function checkElectron(context) {
 	}
 }
 
+async function checkKha(context) {
+	const downloadPath = ResolveDownloadPath('Kha');
+	if (await directoryExists(downloadPath)) {
+		return;
+	}
+
+	return new Promise((resolve, reject) => {
+		vscode.window.showInformationMessage('Downloading Kha...');
+		let message = vscode.window.setStatusBarMessage('Downloading Kha...');
+
+		const process = child_process.spawn('git', ['clone', 'https://github.com/Kode/Kha.git', downloadPath]);
+
+		let error = null;
+
+		process.on('error', (err) => {
+			error = err;
+		})
+
+		process.on('close', (code) => {
+			if (code === 0) {
+				child_process.exec(path.join(downloadPath, (os.platform() === 'win32') ? 'get_dlc.bat' : 'get_dlc'), (err) => {
+					message.dispose();
+
+					if (err) {
+						vscode.window.showInformationMessage('Could not download Kha because ' + error);
+					}
+					else {
+						vscode.window.showInformationMessage('Finished downloading Kha.');
+					}
+
+					resolve();
+				});				
+			}
+			else {
+				message.dispose();
+				if (error) {
+					vscode.window.showInformationMessage('Could not download Kha because ' + error);
+				}
+				else {
+					vscode.window.showInformationMessage('Could not download Kha, git returned ' + code + '.');
+				}
+				resolve();
+			}
+		});
+	});
+}
+
+async function checkKhaAndElectron(context) {
+	await checkKha(context);
+	await checkElectron(context);
+}
+
 function checkProject(context, rootPath) {
 	if (!fs.existsSync(path.join(rootPath, 'khafile.js'))) {
 		return;
@@ -642,7 +694,7 @@ function checkProject(context, rootPath) {
 
 	configureVsHaxe(rootPath);
 
-	checkElectron(context);
+	checkKhaAndElectron(context);
 
 	const configuration = vscode.workspace.getConfiguration();
 	const buildDir = vscode.workspace.getConfiguration('kha').buildDir;

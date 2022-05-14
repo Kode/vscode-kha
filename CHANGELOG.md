@@ -1,3 +1,8 @@
+### 22.5.1
+
+* Kha is now downloaded instead of bundled - the extension automatically
+  downloads the latest version and also provides an update-command
+
 ### 22.5.0
 
 * Support the directory-structure of new Kha-revisions

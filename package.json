@@ -38,6 +38,11 @@
 				"command": "kha.findKhaElectron",
 				"title": "Locate the downloaded electron executable",
 				"category": "Kha"
+			},
+			{
+				"command": "kha.updateKha",
+				"title": "Update extension-internal Kha",
+				"category": "Kha"
 			}
 		],
 		"configuration": {

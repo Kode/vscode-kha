@@ -631,9 +631,12 @@ async function checkElectron(context) {
 	}
 }
 
+let khaDownloaded = false;
+
 async function checkKha(context) {
 	const downloadPath = ResolveDownloadPath('Kha');
 	if (await directoryExists(downloadPath)) {
+		khaDownloaded = true;
 		return;
 	}
 
@@ -658,6 +661,7 @@ async function checkKha(context) {
 						vscode.window.showInformationMessage('Could not download Kha because ' + error);
 					}
 					else {
+						khaDownloaded = true;
 						vscode.window.showInformationMessage('Finished downloading Kha.');
 					}
 
@@ -671,6 +675,54 @@ async function checkKha(context) {
 				}
 				else {
 					vscode.window.showInformationMessage('Could not download Kha, git returned ' + code + '.');
+				}
+				resolve();
+			}
+		});
+	});
+}
+
+async function updateKha() {
+	const downloadPath = ResolveDownloadPath('Kha');
+	if (!khaDownloaded) {
+		vscode.window.showInformationMessage('Could not update Kha because it was not yet downloaded');
+		return;
+	}
+
+	return new Promise((resolve, reject) => {
+		vscode.window.showInformationMessage('Updating Kha...');
+		let message = vscode.window.setStatusBarMessage('Updating Kha...');
+
+		const process = child_process.spawn('git', ['-C', downloadPath, 'pull', 'origin', 'main']);
+
+		let error = null;
+
+		process.on('error', (err) => {
+			error = err;
+		})
+
+		process.on('close', (code) => {
+			if (code === 0) {
+				child_process.exec(path.join(downloadPath, (os.platform() === 'win32') ? 'get_dlc.bat' : 'get_dlc'), (err) => {
+					message.dispose();
+
+					if (err) {
+						vscode.window.showInformationMessage('Could not update Kha because ' + error);
+					}
+					else {
+						vscode.window.showInformationMessage('Finished updating Kha.');
+					}
+
+					resolve();
+				});				
+			}
+			else {
+				message.dispose();
+				if (error) {
+					vscode.window.showInformationMessage('Could not update Kha because ' + error);
+				}
+				else {
+					vscode.window.showInformationMessage('Could not update Kha, git returned ' + code + '.');
 				}
 				resolve();
 			}
@@ -905,6 +957,12 @@ exports.activate = (context) => {
 
 	context.subscriptions.push(disposable);
 
+	disposable = vscode.commands.registerCommand('kha.updateKha', () => {
+		updateKha();
+	});
+
+	context.subscriptions.push(disposable);
+
 	const targetItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 	targetItem.text = `$(desktop-download) ${currentTarget}`;
 	targetItem.tooltip = 'Select Completion Target';
@@ -942,7 +1000,8 @@ exports.activate = (context) => {
 		findFFMPEG: findFFMPEG,
 		findKhaElectron: findKhaElectron,
 		findDefaultTarget: findDefaultTarget,
-		compile: compile
+		compile: compile,
+		updateKha: updateKha
 	};
 
 	return api;

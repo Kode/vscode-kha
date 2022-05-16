@@ -1,3 +1,8 @@
+### 22.5.2
+
+* The Kha-download is now optional and automatically triggered when needed
+* vshaxe is now automatically reconfigured after the Kha-download
+
 ### 22.5.1
 
 * Kha is now downloaded instead of bundled - the extension automatically

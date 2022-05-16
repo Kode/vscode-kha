@@ -12,18 +12,26 @@ const child_process = require('child_process');
 
 let channel = null;
 
+function getExtensionPath() {
+	return vscode.extensions.getExtension('kodetech.kha').extensionPath;
+}
+
 function findKha(channel) {
 	let localkhapath = path.resolve(vscode.workspace.rootPath, 'Kha');
-	if (fs.existsSync(localkhapath) && fs.existsSync(path.join(localkhapath, 'Tools', 'khamake', 'out', 'main.js'))) return localkhapath;
+	if (fs.existsSync(localkhapath) && fs.existsSync(path.join(localkhapath, 'Tools', 'khamake', 'out', 'main.js'))) {
+		return localkhapath;
+	}
+
 	let khapath = vscode.workspace.getConfiguration('kha').khaPath;
 	if (khapath.length > 0) {
 		return path.isAbsolute(khapath) ? khapath : path.resolve(vscode.workspace.rootPath, khapath);
 	}
 
-	if (channel) {
-		channel.appendLine('Warning: Falling back to integrated Kha. Consider downloading an up to date version and setting the khaPath option.');
-	}
-	return path.join(vscode.extensions.getExtension('kodetech.kha').extensionPath, 'Kha');
+	return path.join(getExtensionPath(), 'Kha');
+}
+
+function isUsingInternalKha() {
+	return findKha() === path.join(vscode.extensions.getExtension('kodetech.kha').extensionPath, 'Kha');
 }
 
 function findDefaultTarget() {
@@ -281,10 +289,6 @@ function chmodEverything() {
 	fs.chmodSync(path.join(base, 'Tools', sysdir(), 'oggenc'), 0o755);
 	fs.chmodSync(path.join(base, 'Kinc', 'Tools', sysdir(), 'kraffiti'), 0o755);
 	fs.chmodSync(path.join(base, 'Kinc', 'Tools', sysdir(), 'krafix'), 0o755);
-}
-
-function getExtensionPath() {
-	return vscode.extensions.getExtension('kodetech.kha').extensionPath;
 }
 
 function ResolvePackageTestPath(pkg) {
@@ -634,6 +638,10 @@ async function checkElectron(context) {
 let khaDownloaded = false;
 
 async function checkKha(context) {
+	if (!isUsingInternalKha()) {
+		return;
+	}
+
 	const downloadPath = ResolveDownloadPath('Kha');
 	if (await directoryExists(downloadPath)) {
 		khaDownloaded = true;
@@ -730,24 +738,21 @@ async function updateKha() {
 	});
 }
 
-async function checkKhaAndElectron(context) {
-	await checkKha(context);
-	await checkElectron(context);
-}
-
-function checkProject(context, rootPath) {
+async function checkProject(context, rootPath) {
 	if (!fs.existsSync(path.join(rootPath, 'khafile.js'))) {
 		return;
 	}
 
-	if (findKha() === path.join(vscode.extensions.getExtension('kodetech.kha').extensionPath, 'Kha')) {
+	if (isUsingInternalKha()) {
 		chmodEverything()
 	}
 
+	await checkKha(context);
+
 	configureVsHaxe(rootPath);
 
-	checkKhaAndElectron(context);
-
+	await checkElectron(context);
+	
 	const configuration = vscode.workspace.getConfiguration();
 	const buildDir = vscode.workspace.getConfiguration('kha').buildDir;
 	let config = configuration.get('launch');

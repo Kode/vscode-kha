@@ -1,3 +1,7 @@
+### 22.6.0
+
+* Make sure Kha exists before trying to chmod its executables
+
 ### 22.5.2
 
 * The Kha-download is now optional and automatically triggered when needed

@@ -743,11 +743,11 @@ async function checkProject(context, rootPath) {
 		return;
 	}
 
+	await checkKha(context);
+
 	if (isUsingInternalKha()) {
 		chmodEverything()
 	}
-
-	await checkKha(context);
 
 	configureVsHaxe(rootPath);
 

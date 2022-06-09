@@ -1,3 +1,7 @@
+### 22.6.4
+
+* Remove outdated compile-targets
+
 ### 22.6.3
 
 * Add additional compile-targets

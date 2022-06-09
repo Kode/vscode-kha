@@ -1,3 +1,7 @@
+### 22.6.2
+
+* Add Electron and Kha to the vscodeignore file to avoid uploading them again (thanks RblSb)
+
 ### 22.6.1
 
 * Trigger the Kha-download for the Kha-init-command if necessary

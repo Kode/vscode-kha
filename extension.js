@@ -797,6 +797,7 @@ const KhaTaskProvider = {
 			{ arg: 'debug-html5', name: 'Debug HTML5', default: true },
 			{ arg: 'krom', name: 'Krom', default: false },
 			{ arg: 'html5', name: 'HTML5', default: false },
+			{ arg: 'html5worker', name: 'HTML5 in a Worker', default: false },
 			{ arg: 'windows', name: 'Windows', default: false },
 			{ arg: 'windows', name: 'Windows (full build)', default: false, full: true },
 			{ arg: 'windows', name: 'Windows (Direct3D 12)', default: false, graphics: 'direct3d12' },
@@ -834,13 +835,15 @@ const KhaTaskProvider = {
 			{ arg: 'psm', name: 'PlayStation Mobile', default: false },
 			{ arg: 'java', name: 'Java', default: false },
 			{ arg: 'wpf', name: 'WPF', default: false },
-			{ arg: 'ps4', name: 'PlayStation 4', default: false },
-			{ arg: 'xboxone', name: 'Xbox One', default: false },
-			{ arg: 'switch', name: 'Switch', default: false },
 			{ arg: 'freebsd', name: 'FreeBSD', default: false },
 			{ arg: 'freebsd', name: 'FreeBSD (full build)', default: false, full: true },
 			{ arg: 'freebsd', name: 'FreeBSD (Vulkan)', default: false, graphics: 'vulkan' },
 			{ arg: 'freebsd', name: 'FreeBSD (Vulkan, full build)', default: false, full: true, graphics: 'vulkan' },
+			{ arg: 'ps4', name: 'PlayStation 4', default: false },
+			{ arg: 'xboxone', name: 'Xbox One', default: false },
+			{ arg: 'switch', name: 'Switch', default: false },
+			{ arg: 'ps5', name: 'PlayStation 5', default: false },
+			{ arg: 'xboxscarlett', name: 'Xbox Series X|S', default: false },
 		];
 
 		let tasks = [];

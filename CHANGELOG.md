@@ -1,3 +1,7 @@
+### 22.6.3
+
+* Add additional compile-targets
+
 ### 22.6.2
 
 * Add Electron and Kha to the vscodeignore file to avoid uploading them again (thanks RblSb)

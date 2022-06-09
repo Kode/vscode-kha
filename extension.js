@@ -926,7 +926,7 @@ exports.activate = (context) => {
 		}
 	});
 
-	let disposable = vscode.commands.registerCommand('kha.init', function () {
+	let disposable = vscode.commands.registerCommand('kha.init', async () => {
 		if (!vscode.workspace.rootPath) {
 			channel.appendLine('No project opened.');
 			return;
@@ -935,6 +935,12 @@ exports.activate = (context) => {
 		if (fs.existsSync(path.join(vscode.workspace.rootPath, 'khafile.js'))) {
 			channel.appendLine('A Kha project already exists in the project directory.');
 			return;
+		}
+
+		await checkKha(context);
+
+		if (isUsingInternalKha()) {
+			chmodEverything()
 		}
 
 		require(path.join(findKha(), 'Tools', 'khamake', 'out', 'init.js')).run('Project', vscode.workspace.rootPath, 'khafile.js');

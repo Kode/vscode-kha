@@ -1,3 +1,7 @@
+### 22.6.1
+
+* Trigger the Kha-download for the Kha-init-command if necessary
+
 ### 22.6.0
 
 * Make sure Kha exists before trying to chmod its executables

@@ -1,3 +1,7 @@
+### 22.6.5
+
+* Remove outdated completion-targets
+
 ### 22.6.4
 
 * Remove outdated compile-targets

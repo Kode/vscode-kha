@@ -557,7 +557,7 @@ function downloadFile(url, filepath) {
 		const request = proto.get(url, response => {
 			if (response.statusCode === 302) {
 				const promise = downloadFile(response.headers['location'], filepath);
-				promise.then(resolve, reject); 
+				promise.then(resolve, reject);
 				return;
 			}
 
@@ -580,7 +580,7 @@ function downloadFile(url, filepath) {
 		request.on('error', err => {
 			fs.unlink(filepath, () => reject(err));
 		});
-	
+
 		request.end();
 	});
 }
@@ -590,44 +590,58 @@ async function checkElectron(context) {
 	const dependencies = json.runtimeDependencies;
 	dependencies.forEach(pkg => ResolveFilePaths(pkg));
 	let filteredPackages = await filterPackages(dependencies);
+	const promises = [];
 	if (filteredPackages) {
-        for (let pkg of filteredPackages) {
-			vscode.window.showInformationMessage('Downloading Electron...');
-			let message = vscode.window.setStatusBarMessage('Downloading Electron...');
-
-			let success = false;
-			let error = null;
-
-			try {
-				const filename = os.platform() !== 'freebsd' ? 'electron.zip' : 'electron.txz';
-				const filepath = ResolveDownloadPath(filename);
-
-				await downloadFile(pkg.url, filepath);
-
-				if (os.platform() !== 'freebsd') {
-					const data = await readFile(filepath);
-					await InstallZip(data, pkg.description, pkg.installPath, pkg.binaries, pkg.links);
+		for (let pkg of filteredPackages) {
+			promises.push(vscode.window.withProgress(
+				{
+					location: vscode.ProgressLocation.Notification,
+					title: 'Downloading Electron...',
+					cancellable: false,
+				},
+				async (progress, token) => {
+					return downloadElectron(pkg);
 				}
-				else {
-					await InstallFreeBSD(filepath, pkg.description, pkg.installPath, pkg.binaries, pkg.links);
-				}
-
-				fs.unlinkSync(filepath);
-
-				success = true;
-			}
-			catch (err) {
-				error = err;
-			}
-
-			message.dispose();
-			if (success) {
-				vscode.window.showInformationMessage('Finished downloading Electron.');
-			}
-			else {
-				vscode.window.showInformationMessage('Could not download Electron because: ' + error);
-			}
+			));
 		}
+	}
+	return Promise.all(promises);
+}
+
+async function downloadElectron(pkg) {
+	let message = vscode.window.setStatusBarMessage('Downloading Electron...');
+
+	let success = false;
+	let error = null;
+
+	try {
+		const filename = os.platform() !== 'freebsd' ? 'electron.zip' : 'electron.txz';
+		const filepath = ResolveDownloadPath(filename);
+
+		await downloadFile(pkg.url, filepath);
+
+		if (os.platform() !== 'freebsd') {
+			const data = await readFile(filepath);
+			await InstallZip(data, pkg.description, pkg.installPath, pkg.binaries, pkg.links);
+		}
+		else {
+			await InstallFreeBSD(filepath, pkg.description, pkg.installPath, pkg.binaries, pkg.links);
+		}
+
+		fs.unlinkSync(filepath);
+
+		success = true;
+	}
+	catch (err) {
+		error = err;
+	}
+
+	message.dispose();
+	if (success) {
+		vscode.window.showInformationMessage('Finished downloading Electron.');
+	}
+	else {
+		vscode.window.showInformationMessage('Could not download Electron because: ' + error);
 	}
 }
 
@@ -640,12 +654,25 @@ async function checkKha(context) {
 
 	const downloadPath = ResolveDownloadPath('Kha');
 	if (await directoryExists(downloadPath)) {
-		khaDownloaded = true;
-		return;
+		const khaDownloadedPath = ResolveDownloadPath(".khadownloaded");
+		khaDownloaded = fs.existsSync(khaDownloadedPath);
+		if (khaDownloaded) return;
+		fs.rmSync(downloadPath, { recursive: true, force: true });
 	}
+	return vscode.window.withProgress(
+		{
+			location: vscode.ProgressLocation.Notification,
+			title: 'Downloading Kha...',
+			cancellable: false,
+		},
+		async (progress) => {
+			return downloadKha(downloadPath);
+		}
+	);
+}
 
+async function downloadKha(downloadPath) {
 	return new Promise((resolve, reject) => {
-		vscode.window.showInformationMessage('Downloading Kha...');
 		let message = vscode.window.setStatusBarMessage('Downloading Kha...');
 
 		const process = child_process.spawn('git', ['clone', 'https://github.com/Kode/Kha.git', downloadPath]);
@@ -665,12 +692,14 @@ async function checkKha(context) {
 						vscode.window.showInformationMessage('Could not download Kha because ' + error);
 					}
 					else {
+						const khaDownloadedPath = ResolveDownloadPath(".khadownloaded");
+						if (!fs.existsSync(khaDownloadedPath)) fs.writeFileSync(khaDownloadedPath, "");
 						khaDownloaded = true;
 						vscode.window.showInformationMessage('Finished downloading Kha.');
 					}
 
 					resolve();
-				});				
+				});
 			}
 			else {
 				message.dispose();
@@ -687,14 +716,30 @@ async function checkKha(context) {
 }
 
 async function updateKha() {
+	if (!isUsingInternalKha()) {
+		vscode.window.showInformationMessage('Could not update Kha because you\'re using custom version through "kha.khaPath".');
+		return;
+	}
 	const downloadPath = ResolveDownloadPath('Kha');
 	if (!khaDownloaded) {
-		vscode.window.showInformationMessage('Could not update Kha because it was not yet downloaded');
+		vscode.window.showInformationMessage('Could not update Kha because it was not yet downloaded.');
 		return;
 	}
 
+	return vscode.window.withProgress(
+		{
+			location: vscode.ProgressLocation.Notification,
+			title: 'Updating Kha...',
+			cancellable: false,
+		},
+		async (progress) => {
+			return pullKhaUpdate(downloadPath);
+		}
+	);
+}
+
+async function pullKhaUpdate(downloadPath) {
 	return new Promise((resolve, reject) => {
-		vscode.window.showInformationMessage('Updating Kha...');
 		let message = vscode.window.setStatusBarMessage('Updating Kha...');
 
 		const process = child_process.spawn('git', ['-C', downloadPath, 'pull', 'origin', 'main']);
@@ -718,7 +763,7 @@ async function updateKha() {
 					}
 
 					resolve();
-				});				
+				});
 			}
 			else {
 				message.dispose();
@@ -742,13 +787,13 @@ async function checkProject(context, rootPath) {
 	await checkKha(context);
 
 	if (isUsingInternalKha()) {
-		chmodEverything()
+		chmodEverything();
 	}
 
 	configureVsHaxe(rootPath);
 
 	await checkElectron(context);
-	
+
 	const configuration = vscode.workspace.getConfiguration();
 	const buildDir = vscode.workspace.getConfiguration('kha').buildDir;
 	let config = configuration.get('launch');

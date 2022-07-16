@@ -976,7 +976,7 @@ exports.activate = (context) => {
 	context.subscriptions.push(targetItem);
 
 	disposable = vscode.commands.registerCommand("kha.selectCompletionTarget", () => {
-		let items = ['HTML5 (Electron)', 'HTML5 (Web)', 'Krom', 'Kinc', 'Android (Java)', 'Flash', 'HTML5-Worker', 'Java', 'Node.js', 'Unity', 'WPF'];
+		let items = ['HTML5 (Electron)', 'HTML5 (Web)', 'Krom', 'Kinc', 'Android (Java)', 'HTML5-Worker', 'Java', 'Node.js', 'WPF'];
 		vscode.window.showQuickPick(items).then((choice) => {
 			if (!choice || choice === currentTarget) {
 				return;

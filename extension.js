@@ -144,24 +144,28 @@ let KhaHaxeInstallationProvider = {
 	deactivate: () => {}
 };
 
-let KhaDisplayArgumentsProvider = {
-	init: (api, activationChangedCallback) => {
+class KhaDisplayArgumentsProviderClass {
+	init(api, activationChangedCallback) {
 		this.api = api;
 		this.activationChangedCallback = activationChangedCallback;
+		this.updateArgumentsCallback = null;
 		this.description = 'Kha project';
-	},
-	activate: (provideArguments) => {
+	}
+
+	activate(provideArguments) {
 		this.updateArgumentsCallback = provideArguments;
 		if (this.args) {
 			this.update(this.args);
 		}
 		this.activationChangedCallback(true);
-	},
-	deactivate: () => {
+	}
+
+	deactivate() {
 		this.updateArgumentsCallback = null;
 		this.activationChangedCallback(false);
-	},
-	update: (args) => {
+	}
+
+	update(args) {
 		if (this.args !== args && this.api) {
 			this.args = args;
 			this.parsedArguments = this.api.parseHxmlToArguments(args);
@@ -170,7 +174,9 @@ let KhaDisplayArgumentsProvider = {
 			}
 		}
 	}
-};
+}
+
+const KhaDisplayArgumentsProvider = new KhaDisplayArgumentsProviderClass();
 
 function updateHaxeArguments(rootPath, hxmlPath) {
 	const hxml = fs.readFileSync(hxmlPath, 'utf8');

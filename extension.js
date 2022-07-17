@@ -16,7 +16,7 @@ function getExtensionPath() {
 	return vscode.extensions.getExtension('kodetech.kha').extensionPath;
 }
 
-function findKha(channel) {
+function findKha() {
 	let localkhapath = path.resolve(vscode.workspace.rootPath, 'Kha');
 	if (fs.existsSync(localkhapath) && fs.existsSync(path.join(localkhapath, 'Tools', 'khamake', 'out', 'main.js'))) {
 		return localkhapath;
@@ -112,14 +112,14 @@ function compile(target, silent) {
 		parallelAssetConversion: 0,
 		haxe3: false
 	};
-	return require(path.join(findKha(channel), 'Tools', 'khamake', 'out', 'main.js'))
-	.run(options, {
-		info: message => {
-			channel.appendLine(message);
-		}, error: message => {
-			channel.appendLine(message);
-		}
-	});
+	return require(path.join(findKha(), 'Tools', 'khamake', 'out', 'main.js'))
+		.run(options, {
+			info: message => {
+				channel.appendLine(message);
+			}, error: message => {
+				channel.appendLine(message);
+			}
+		});
 }
 
 let KhaHaxeInstallationProvider = {
@@ -142,7 +142,7 @@ let KhaHaxeInstallationProvider = {
 	},
 
 	deactivate: () => {}
-}
+};
 
 let KhaDisplayArgumentsProvider = {
 	init: (api, activationChangedCallback) => {
@@ -170,7 +170,7 @@ let KhaDisplayArgumentsProvider = {
 			}
 		}
 	}
-}
+};
 
 function updateHaxeArguments(rootPath, hxmlPath) {
 	const hxml = fs.readFileSync(hxmlPath, 'utf8');
@@ -225,33 +225,33 @@ function sysdir() {
 
 function choiceToHxml(choice) {
 	switch (choice) {
-		case 'HTML5 (Electron)':
-			return 'debug-html5';
-		case 'HTML5 (Web)':
-			return 'html5';
-		case 'Krom':
-			return 'krom';
-		case 'Kinc':
-			switch (process.platform) {
-				case 'win32':
-					return 'windows';
-				case 'darwin':
-					return 'osx';
-				case 'linux':
-					return 'linux';
-				default:
-					return process.platform;
-			}
-		case 'Android (Java)':
-			return 'android';
-		case 'HTML5-Worker':
-			return 'html5worker';
-		case 'Java':
-			return 'java';
-		case 'Node.js':
-			return 'node';
-		case 'WPF':
-			return 'wpf';
+	case 'HTML5 (Electron)':
+		return 'debug-html5';
+	case 'HTML5 (Web)':
+		return 'html5';
+	case 'Krom':
+		return 'krom';
+	case 'Kinc':
+		switch (process.platform) {
+		case 'win32':
+			return 'windows';
+		case 'darwin':
+			return 'osx';
+		case 'linux':
+			return 'linux';
+		default:
+			return process.platform;
+		}
+	case 'Android (Java)':
+		return 'android';
+	case 'HTML5-Worker':
+		return 'html5worker';
+	case 'Java':
+		return 'java';
+	case 'Node.js':
+		return 'node';
+	case 'WPF':
+		return 'wpf';
 	}
 }
 
@@ -288,74 +288,75 @@ function chmodEverything() {
 }
 
 function ResolvePackageTestPath(pkg) {
-    if (pkg.installPath) {
-        return path.resolve(getExtensionPath(), pkg.installPath);
-    }
-    return null;
+	if (pkg.installPath) {
+		return path.resolve(getExtensionPath(), pkg.installPath);
+	}
+	return null;
 }
 
 function ResolvePackageBinaries(pkg) {
-    if (pkg.binaries) {
-        return pkg.binaries.map(value => path.resolve(ResolveBaseInstallPath(pkg), value));
-    }
-    return null;
+	if (pkg.binaries) {
+		return pkg.binaries.map(value => path.resolve(ResolveBaseInstallPath(), value));
+	}
+	return null;
 }
 
 function ResolvePackageLinks(pkg) {
-    if (pkg.links) {
-        return pkg.links.map(value => path.resolve(ResolveBaseInstallPath(pkg), value));
-    }
-    return null;
+	if (pkg.links) {
+		return pkg.links.map(value => path.resolve(ResolveBaseInstallPath(), value));
+	}
+	return null;
 }
 
-function ResolveBaseInstallPath(pkg) {
-    let basePath = getExtensionPath();
-    basePath = path.resolve(basePath, 'electron');
-    return basePath;
+function ResolveBaseInstallPath() {
+	let basePath = getExtensionPath();
+	basePath = path.resolve(basePath, 'electron');
+	return basePath;
 }
 
 function ResolveDownloadPath(filename) {
 	let basePath = getExtensionPath();
-    basePath = path.resolve(basePath, filename);
-    return basePath;
+	basePath = path.resolve(basePath, filename);
+	return basePath;
 }
 
 function ResolveFilePaths(pkg) {
-    pkg.installTestPath = ResolvePackageTestPath(pkg);
-    pkg.installPath = ResolveBaseInstallPath(pkg);
-    pkg.binaries = ResolvePackageBinaries(pkg);
-    pkg.links = ResolvePackageLinks(pkg);
+	pkg.installTestPath = ResolvePackageTestPath(pkg);
+	pkg.installPath = ResolveBaseInstallPath();
+	pkg.binaries = ResolvePackageBinaries(pkg);
+	pkg.links = ResolvePackageLinks(pkg);
 }
 
 function filterPlatformPackages(packages) {
-    if (packages) {
-        return packages.filter(pkg => {
-            if (pkg.architectures && pkg.architectures.indexOf(os.arch()) === -1) {
-                return false;
-            }
+	if (packages) {
+		return packages.filter(pkg => {
+			if (pkg.architectures && pkg.architectures.indexOf(os.arch()) === -1) {
+				return false;
+			}
 
-            if (pkg.platforms && pkg.platforms.indexOf(os.platform()) === -1) {
-                return false;
-            }
+			if (pkg.platforms && pkg.platforms.indexOf(os.platform()) === -1) {
+				return false;
+			}
 
-            return true;
-        });
-    } else {
-        throw 'Package manifest does not exist.';
-    }
+			return true;
+		});
+	}
+	else {
+		throw 'Package manifest does not exist.';
+	}
 }
 
 async function directoryExists(filePath) {
-    return new Promise((resolve, reject) => {
-        fs.stat(filePath, (err, stats) => {
-            if (stats && stats.isDirectory()) {
-                resolve(true);
-            }
+	return new Promise((resolve) => {
+		fs.stat(filePath, (err, stats) => {
+			if (stats && stats.isDirectory()) {
+				resolve(true);
+			}
 			else {
-                resolve(false);
-            }
-        });
-    });
+				resolve(false);
+			}
+		});
+	});
 }
 
 async function filterAlreadyInstalledPackages(packages) {
@@ -371,12 +372,12 @@ async function filterAlreadyInstalledPackages(packages) {
 			filtered.push(pkg);
 		}
 	}
-    return filtered;
+	return filtered;
 }
 
 async function filterPackages(packages) {
-    let platformPackages = filterPlatformPackages(packages);
-    return filterAlreadyInstalledPackages(platformPackages);
+	let platformPackages = filterPlatformPackages(packages);
+	return filterAlreadyInstalledPackages(platformPackages);
 }
 
 async function readFile(filepath) {
@@ -393,90 +394,91 @@ async function readFile(filepath) {
 }
 
 async function InstallZipSymLinks(buffer, destinationInstallPath, links) {
-    return new Promise((resolve, reject) => {
-        yauzl.fromBuffer(buffer, { lazyEntries: true }, (err, zipFile) => {
-            if (err) {
-                let message = 'Kha Extension was unable to download its dependencies. Please check your internet connection. If you use a proxy server, please visit https://aka.ms/VsCodeCsharpNetworking';
-                return reject(message);
-            }
+	return new Promise((resolve, reject) => {
+		yauzl.fromBuffer(buffer, { lazyEntries: true }, (err, zipFile) => {
+			if (err) {
+				let message = 'Kha Extension was unable to download its dependencies. Please check your internet connection. If you use a proxy server, please visit https://aka.ms/VsCodeCsharpNetworking';
+				return reject(message);
+			}
 
-            zipFile.readEntry();
+			zipFile.readEntry();
 
-            zipFile.on('entry', (entry) => {
-                let absoluteEntryPath = path.resolve(destinationInstallPath, entry.fileName);
+			zipFile.on('entry', (entry) => {
+				let absoluteEntryPath = path.resolve(destinationInstallPath, entry.fileName);
 
-                if (entry.fileName.endsWith('/')) {
-                    // Directory - already created
-                    zipFile.readEntry();
-                } else {
-                    // File - symlink it
-                    zipFile.openReadStream(entry, (readerr, readStream) => {
-                        if (readerr) {
-                            return reject('Error reading zip stream');
-                        }
+				if (entry.fileName.endsWith('/')) {
+					// Directory - already created
+					zipFile.readEntry();
+				}
+				else {
+					// File - symlink it
+					zipFile.openReadStream(entry, (readerr, readStream) => {
+						if (readerr) {
+							return reject('Error reading zip stream');
+						}
 
-                        // Prevent Electron from kicking in special behavior when opening a write-stream to a .asar file
-                        let originalAbsoluteEntryPath = absoluteEntryPath;
-                        if (absoluteEntryPath.endsWith('.asar')) {
-                            absoluteEntryPath += '_';
-                        }
+						// Prevent Electron from kicking in special behavior when opening a write-stream to a .asar file
+						if (absoluteEntryPath.endsWith('.asar')) {
+							absoluteEntryPath += '_';
+						}
 
-                        if (links && links.indexOf(absoluteEntryPath) !== -1) {
-                            readStream.setEncoding('utf8');
-                            let body = '';
-                            readStream.on('data', (chunk) => {
-                                body += chunk;
-                            });
-                            readStream.on('end', () => {
-                                // vscode.window.showInformationMessage('Linking ' + absoluteEntryPath + ' and ' + path.join(absoluteEntryPath, body));
-                                fs.symlink(body, absoluteEntryPath, undefined, () => {
-                                    zipFile.readEntry();
-                                });
-                            });
-                        } else {
-                            zipFile.readEntry();
-                        }
-                    });
-                }
-            });
+						if (links && links.indexOf(absoluteEntryPath) !== -1) {
+							readStream.setEncoding('utf8');
+							let body = '';
+							readStream.on('data', (chunk) => {
+								body += chunk;
+							});
+							readStream.on('end', () => {
+								// vscode.window.showInformationMessage('Linking ' + absoluteEntryPath + ' and ' + path.join(absoluteEntryPath, body));
+								fs.symlink(body, absoluteEntryPath, undefined, () => {
+									zipFile.readEntry();
+								});
+							});
+						}
+						else {
+							zipFile.readEntry();
+						}
+					});
+				}
+			});
 
-            zipFile.on('end', () => {
-                resolve();
-            });
+			zipFile.on('end', () => {
+				resolve();
+			});
 
-            zipFile.on('error', ziperr => {
-                reject('Zip File Error:' + ziperr.code || '');
-            });
-        });
-    });
+			zipFile.on('error', ziperr => {
+				reject('Zip File Error:' + ziperr.code || '');
+			});
+		});
+	});
 }
 
 async function InstallZip(buffer, description, destinationInstallPath, binaries, links) {
-    return new Promise((resolve, reject) => {
-        yauzl.fromBuffer(buffer, { lazyEntries: true }, (err, zipFile) => {
-            if (err) {
-                let message = 'Kha Extension was unable to download its dependencies. Please check your internet connection. If you use a proxy server, please visit https://aka.ms/VsCodeCsharpNetworking';
-                return reject(message);
-            }
+	return new Promise((resolve, reject) => {
+		yauzl.fromBuffer(buffer, { lazyEntries: true }, (err, zipFile) => {
+			if (err) {
+				let message = 'Kha Extension was unable to download its dependencies. Please check your internet connection. If you use a proxy server, please visit https://aka.ms/VsCodeCsharpNetworking';
+				return reject(message);
+			}
 
-            zipFile.readEntry();
+			zipFile.readEntry();
 
-            zipFile.on('entry', async (entry) => {
-                let absoluteEntryPath = path.resolve(destinationInstallPath, entry.fileName);
+			zipFile.on('entry', async (entry) => {
+				let absoluteEntryPath = path.resolve(destinationInstallPath, entry.fileName);
 
-                if (entry.fileName.endsWith('/')) {
-                    // Directory - create it
-                    await mkdirp(absoluteEntryPath, { mode: 0o775 });
-                    zipFile.readEntry();
-                }
+				if (entry.fileName.endsWith('/')) {
+					// Directory - create it
+					await mkdirp(absoluteEntryPath, { mode: 0o775 });
+					zipFile.readEntry();
+				}
 				else {
-                    // File - extract it
-                    zipFile.openReadStream(entry, async (readerr, readStream) => {
-                        if (readerr) {
-                            return reject('Error reading zip stream');
-                        }
+					// File - extract it
+					zipFile.openReadStream(entry, async (readerr, readStream) => {
+						if (readerr) {
+							return reject('Error reading zip stream');
+						}
 
-                        await mkdirp(path.dirname(absoluteEntryPath), { mode: 0o775 });
+						await mkdirp(path.dirname(absoluteEntryPath), { mode: 0o775 });
 
 						// Make sure executable files have correct permissions when extracted
 						let fileMode = binaries && binaries.indexOf(absoluteEntryPath) !== -1
@@ -501,27 +503,27 @@ async function InstallZip(buffer, description, destinationInstallPath, binaries,
 								zipFile.readEntry();
 							});
 						}
-                    });
-                }
-            });
+					});
+				}
+			});
 
-            zipFile.on('end', () => {
-                InstallZipSymLinks(buffer, destinationInstallPath, links).then(() => {
-                    resolve();
-                }, (errr) => {
-                    reject('Error symlinking');
-                });
-            });
+			zipFile.on('end', () => {
+				InstallZipSymLinks(buffer, destinationInstallPath, links).then(() => {
+					resolve();
+				}, () => {
+					reject('Error symlinking');
+				});
+			});
 
-            zipFile.on('error', ziperr => {
-                reject('Zip File Error:' + ziperr.code || '');
-            });
-        });
-    });
+			zipFile.on('error', ziperr => {
+				reject('Zip File Error:' + ziperr.code || '');
+			});
+		});
+	});
 }
 
-async function InstallFreeBSD(fsPath, description, destinationInstallPath, binaries, links) {
-    return new Promise((resolve, reject) => {
+async function InstallFreeBSD(fsPath, description, destinationInstallPath) {
+	return new Promise((resolve, reject) => {
 		fs.mkdtemp(path.join(os.tmpdir(), 'electron-'), (err, folder) => {
 			if (err) {
 				let message = 'Unable to create temporary directory: ' + err;
@@ -546,7 +548,7 @@ async function InstallFreeBSD(fsPath, description, destinationInstallPath, binar
 			});
 		});
 		resolve();
-    });
+	});
 }
 
 // Based on https://stackoverflow.com/a/62056725
@@ -585,7 +587,7 @@ function downloadFile(url, filepath) {
 	});
 }
 
-async function checkElectron(context) {
+async function checkElectron() {
 	const json = vscode.extensions.getExtension('kodetech.kha').packageJSON;
 	const dependencies = json.runtimeDependencies;
 	dependencies.forEach(pkg => ResolveFilePaths(pkg));
@@ -599,7 +601,7 @@ async function checkElectron(context) {
 					title: 'Downloading Electron...',
 					cancellable: false,
 				},
-				async (progress, token) => {
+				async () => {
 					return downloadElectron(pkg);
 				}
 			));
@@ -625,7 +627,7 @@ async function downloadElectron(pkg) {
 			await InstallZip(data, pkg.description, pkg.installPath, pkg.binaries, pkg.links);
 		}
 		else {
-			await InstallFreeBSD(filepath, pkg.description, pkg.installPath, pkg.binaries, pkg.links);
+			await InstallFreeBSD(filepath, pkg.description, pkg.installPath);
 		}
 
 		fs.unlinkSync(filepath);
@@ -647,14 +649,14 @@ async function downloadElectron(pkg) {
 
 let khaDownloaded = false;
 
-async function checkKha(context) {
+async function checkKha() {
 	if (!isUsingInternalKha()) {
 		return;
 	}
 
 	const downloadPath = ResolveDownloadPath('Kha');
 	if (await directoryExists(downloadPath)) {
-		const khaDownloadedPath = ResolveDownloadPath(".khadownloaded");
+		const khaDownloadedPath = ResolveDownloadPath('.khadownloaded');
 		khaDownloaded = fs.existsSync(khaDownloadedPath);
 		if (khaDownloaded) return;
 		fs.rmSync(downloadPath, { recursive: true, force: true });
@@ -665,14 +667,14 @@ async function checkKha(context) {
 			title: 'Downloading Kha...',
 			cancellable: false,
 		},
-		async (progress) => {
+		async () => {
 			return downloadKha(downloadPath);
 		}
 	);
 }
 
 async function downloadKha(downloadPath) {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		let message = vscode.window.setStatusBarMessage('Downloading Kha...');
 
 		const process = child_process.spawn('git', ['clone', 'https://github.com/Kode/Kha.git', downloadPath]);
@@ -681,7 +683,7 @@ async function downloadKha(downloadPath) {
 
 		process.on('error', (err) => {
 			error = err;
-		})
+		});
 
 		process.on('close', (code) => {
 			if (code === 0) {
@@ -692,8 +694,8 @@ async function downloadKha(downloadPath) {
 						vscode.window.showInformationMessage('Could not download Kha because ' + error);
 					}
 					else {
-						const khaDownloadedPath = ResolveDownloadPath(".khadownloaded");
-						if (!fs.existsSync(khaDownloadedPath)) fs.writeFileSync(khaDownloadedPath, "");
+						const khaDownloadedPath = ResolveDownloadPath('.khadownloaded');
+						if (!fs.existsSync(khaDownloadedPath)) fs.writeFileSync(khaDownloadedPath, '');
 						khaDownloaded = true;
 						vscode.window.showInformationMessage('Finished downloading Kha.');
 					}
@@ -732,14 +734,14 @@ async function updateKha() {
 			title: 'Updating Kha...',
 			cancellable: false,
 		},
-		async (progress) => {
+		async () => {
 			return pullKhaUpdate(downloadPath);
 		}
 	);
 }
 
 async function pullKhaUpdate(downloadPath) {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		let message = vscode.window.setStatusBarMessage('Updating Kha...');
 
 		const process = child_process.spawn('git', ['-C', downloadPath, 'pull', 'origin', 'main']);
@@ -748,7 +750,7 @@ async function pullKhaUpdate(downloadPath) {
 
 		process.on('error', (err) => {
 			error = err;
-		})
+		});
 
 		process.on('close', (code) => {
 			if (code === 0) {
@@ -784,7 +786,7 @@ async function checkProject(context, rootPath) {
 		return;
 	}
 
-	await checkKha(context);
+	await checkKha();
 
 	if (isUsingInternalKha()) {
 		chmodEverything();
@@ -792,7 +794,7 @@ async function checkProject(context, rootPath) {
 
 	configureVsHaxe(rootPath);
 
-	await checkElectron(context);
+	await checkElectron();
 
 	const configuration = vscode.workspace.getConfiguration();
 	const buildDir = vscode.workspace.getConfiguration('kha').buildDir;
@@ -807,14 +809,14 @@ async function checkProject(context, rootPath) {
 		type: 'pwa-chrome',
 		cwd: '${workspaceFolder}/' + buildDir + '/debug-html5',
 		runtimeExecutable: '${command:kha.findKhaElectron}',
-		runtimeArgs: ["--no-sandbox", "--force-device-scale-factor=1", "."],
+		runtimeArgs: ['--no-sandbox', '--force-device-scale-factor=1', '.'],
 		outFiles: [
 			'${workspaceFolder}/' + buildDir + '/debug-html5/*.js'
 		],
 		preLaunchTask: 'Kha: Build for Debug HTML5',
 		internalConsoleOptions: 'openOnSessionStart',
 		skipFiles: [
-			"<node_internals>/**"
+			'<node_internals>/**'
 		]
 	});
 	config.configurations.push({
@@ -823,7 +825,7 @@ async function checkProject(context, rootPath) {
 		name: 'Kha: Krom',
 		preLaunchTask: 'Kha: Build for Krom',
 		internalConsoleOptions: 'openOnSessionStart',
-	})
+	});
 	configuration.update('launch', config, false);
 }
 
@@ -907,7 +909,7 @@ const KhaTaskProvider = {
 			let kind = {
 				type: 'Kha',
 				target: system.name,
-			}
+			};
 
 			let task = null;
 			let khamakePath = path.join(findKha(), 'make.js');
@@ -936,10 +938,10 @@ const KhaTaskProvider = {
 
 		return tasks;
 	},
-	resolveTask: (task, token) => {
+	resolveTask: (task) => {
 		return task;
 	}
-}
+};
 
 let currentTarget = findDefaultTarget();
 
@@ -976,10 +978,10 @@ exports.activate = (context) => {
 			return;
 		}
 
-		await checkKha(context);
+		await checkKha();
 
 		if (isUsingInternalKha()) {
-			chmodEverything()
+			chmodEverything();
 		}
 
 		require(path.join(findKha(), 'Tools', 'khamake', 'out', 'init.js')).run('Project', vscode.workspace.rootPath, 'khafile.js');
@@ -1020,7 +1022,7 @@ exports.activate = (context) => {
 	targetItem.show();
 	context.subscriptions.push(targetItem);
 
-	disposable = vscode.commands.registerCommand("kha.selectCompletionTarget", () => {
+	disposable = vscode.commands.registerCommand('kha.selectCompletionTarget', () => {
 		let items = ['HTML5 (Electron)', 'HTML5 (Web)', 'Krom', 'Kinc', 'Android (Java)', 'HTML5-Worker', 'Java', 'Node.js', 'WPF'];
 		vscode.window.showQuickPick(items).then((choice) => {
 			if (!choice || choice === currentTarget) {

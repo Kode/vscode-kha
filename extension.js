@@ -717,7 +717,7 @@ async function downloadKha(downloadPath) {
 
 async function updateKha() {
 	if (!isUsingInternalKha()) {
-		vscode.window.showInformationMessage('Could not update Kha because you\'re using custom version through "kha.khaPath".');
+		vscode.window.showInformationMessage('Skipping the Kha-Update because "kha.khaPath" is set - the update-command is only intended to be used for the extension-managed copy of Kha which itself is only used when "kha.khaPath" is not set.');
 		return;
 	}
 	const downloadPath = ResolveDownloadPath('Kha');

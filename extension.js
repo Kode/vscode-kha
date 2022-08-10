@@ -261,6 +261,22 @@ function choiceToHxml(choice) {
 	}
 }
 
+function isValidHxmlExists(hxmlPath) {
+	if (!fs.existsSync(hxmlPath)) return false;
+	const hxml = fs.readFileSync(hxmlPath, 'utf8');
+	const arg = hxml.split('\n').find(line => line.startsWith('-cp ') && line.includes('/Backends/'));
+	if (!arg) {
+		channel.appendLine('Path to Kha/Backends/ in hxml is not found.');
+		return true;
+	}
+	const path = arg.replace('-cp ', '');
+	if (!fs.existsSync(path)) {
+		channel.appendLine(`Path ${path} is not incorrect, hxml will be regenerated.`);
+		return false;
+	}
+	return true;
+}
+
 function configureVsHaxe(rootPath) {
 	let vshaxe = vscode.extensions.getExtension('nadako.vshaxe').exports;
 	KhaDisplayArgumentsProvider.init(vshaxe, (active) => {
@@ -268,7 +284,7 @@ function configureVsHaxe(rootPath) {
 
 		const hxmlId = choiceToHxml(currentTarget);
 		const hxmlPath = path.join(rootPath, 'build', `project-${hxmlId}.hxml`);
-		if (fs.existsSync(hxmlPath)) {
+		if (isValidHxmlExists(hxmlPath)) {
 			updateHaxeArguments(rootPath, hxmlPath);
 		}
 		else {
@@ -1041,7 +1057,7 @@ exports.activate = (context) => {
 			const rootPath = vscode.workspace.rootPath;
 			const buildDir = vscode.workspace.getConfiguration('kha').buildDir;
 			const hxmlPath = path.join(rootPath, buildDir, 'project-' + choiceToHxml(choice) + '.hxml');
-			if (fs.existsSync(hxmlPath)) {
+			if (isValidHxmlExists(hxmlPath)) {
 				updateHaxeArguments(rootPath, hxmlPath);
 			}
 			else {

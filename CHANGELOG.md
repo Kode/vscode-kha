@@ -1,3 +1,7 @@
+### 22.8.0
+
+* Pimp some error-checking and error-messaging
+
 ### 22.6.5
 
 * Remove outdated completion-targets

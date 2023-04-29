@@ -1,3 +1,7 @@
+### 23.4.0
+
+* Adjust the target-list to the latest changes in Kha
+
 ### 22.8.0
 
 * Pimp some error-checking and error-messaging

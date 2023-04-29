@@ -248,8 +248,6 @@ function choiceToHxml(choice) {
 		default:
 			return process.platform;
 		}
-	case 'Android (Java)':
-		return 'android';
 	case 'HTML5-Worker':
 		return 'html5worker';
 	case 'Java':
@@ -865,8 +863,8 @@ const KhaTaskProvider = {
 			{ arg: 'html5worker', name: 'HTML5 in a Worker', default: false },
 			{ arg: 'windows', name: 'Windows', default: false },
 			{ arg: 'windows', name: 'Windows (full build)', default: false, full: true },
-			{ arg: 'windows', name: 'Windows (Direct3D 12)', default: false, graphics: 'direct3d12' },
-			{ arg: 'windows', name: 'Windows (Direct3D 12, full build)', default: false, full: true, graphics: 'direct3d12' },
+			{ arg: 'windows', name: 'Windows (Direct3D 11)', default: false, graphics: 'direct3d11' },
+			{ arg: 'windows', name: 'Windows (Direct3D 11, full build)', default: false, full: true, graphics: 'direct3d11' },
 			{ arg: 'windows', name: 'Windows (Direct3D 9)', default: false, graphics: 'direct3d9' },
 			{ arg: 'windows', name: 'Windows (Direct3D 9, full build)', default: false, full: true, graphics: 'direct3d9' },
 			{ arg: 'windows', name: 'Windows (Vulkan)', default: false, graphics: 'vulkan' },
@@ -881,12 +879,12 @@ const KhaTaskProvider = {
 			{ arg: 'osx', name: 'macOS (OpenGL, full build)', default: false, full: true, graphics: 'opengl' },
 			{ arg: 'linux', name: 'Linux', default: false },
 			{ arg: 'linux', name: 'Linux (full build)', default: false, full: true },
-			{ arg: 'linux', name: 'Linux (Vulkan)', default: false, graphics: 'vulkan' },
-			{ arg: 'linux', name: 'Linux (Vulkan, full build)', default: false, full: true, graphics: 'vulkan' },
+			{ arg: 'linux', name: 'Linux (OpenGL)', default: false, graphics: 'opengl' },
+			{ arg: 'linux', name: 'Linux (OpenGL, full build)', default: false, full: true, graphics: 'opengl' },
 			{ arg: 'android', name: 'Android', default: false },
 			{ arg: 'android', name: 'Android (full build)', default: false, full: true },
-			{ arg: 'android-native', name: 'Android (native)', default: false },
-			{ arg: 'android-native', name: 'Android (native, full build)', default: false, full: true },
+			{ arg: 'android', name: 'Android (OpenGL)', default: false, graphics: 'opengl' },
+			{ arg: 'android', name: 'Android (OpenGL, full build)', default: false, full: true, graphics: 'opengl' },
 			{ arg: 'ios', name: 'iOS', default: false },
 			{ arg: 'ios', name: 'iOS (OpenGL)', default: false, graphics: 'opengl' },
 			{ arg: 'pi', name: 'Raspberry Pi', default: false },
@@ -897,8 +895,6 @@ const KhaTaskProvider = {
 			{ arg: 'wpf', name: 'WPF', default: false },
 			{ arg: 'freebsd', name: 'FreeBSD', default: false },
 			{ arg: 'freebsd', name: 'FreeBSD (full build)', default: false, full: true },
-			{ arg: 'freebsd', name: 'FreeBSD (Vulkan)', default: false, graphics: 'vulkan' },
-			{ arg: 'freebsd', name: 'FreeBSD (Vulkan, full build)', default: false, full: true, graphics: 'vulkan' },
 			{ arg: 'ps4', name: 'PlayStation 4', default: false },
 			{ arg: 'xboxone', name: 'Xbox One', default: false },
 			{ arg: 'switch', name: 'Switch', default: false },
@@ -1045,7 +1041,7 @@ exports.activate = (context) => {
 	context.subscriptions.push(targetItem);
 
 	disposable = vscode.commands.registerCommand('kha.selectCompletionTarget', () => {
-		let items = ['HTML5 (Electron)', 'HTML5 (Web)', 'Krom', 'Kinc', 'Android (Java)', 'HTML5-Worker', 'Java', 'Node.js', 'WPF'];
+		let items = ['HTML5 (Electron)', 'HTML5 (Web)', 'Krom', 'Kinc', 'HTML5-Worker', 'Java', 'Node.js', 'WPF'];
 		vscode.window.showQuickPick(items).then((choice) => {
 			if (!choice || choice === currentTarget) {
 				return;

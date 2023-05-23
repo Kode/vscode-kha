@@ -1,3 +1,7 @@
+### 23.5.0
+
+* Make things more robust when Git-Bash is used
+
 ### 23.4.0
 
 * Adjust the target-list to the latest changes in Kha

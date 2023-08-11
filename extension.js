@@ -162,6 +162,7 @@ class KhaDisplayArgumentsProviderClass {
 
 	deactivate() {
 		this.updateArgumentsCallback = null;
+		this.args = null;
 		this.activationChangedCallback(false);
 	}
 
@@ -283,7 +284,9 @@ function configureVsHaxe(rootPath) {
 		const hxmlId = choiceToHxml(currentTarget);
 		const hxmlPath = path.join(rootPath, 'build', `project-${hxmlId}.hxml`);
 		if (isValidHxml(hxmlPath)) {
-			updateHaxeArguments(rootPath, hxmlPath);
+			setTimeout(() => {
+				updateHaxeArguments(rootPath, hxmlPath);
+			}, 1000);
 		}
 		else {
 			compile(hxmlId, true).then(() => {
@@ -1059,7 +1062,10 @@ exports.activate = (context) => {
 			const buildDir = vscode.workspace.getConfiguration('kha').buildDir;
 			const hxmlPath = path.join(rootPath, buildDir, 'project-' + choiceToHxml(choice) + '.hxml');
 			if (isValidHxml(hxmlPath)) {
-				updateHaxeArguments(rootPath, hxmlPath);
+				// wait vshaxe haxe server init to prevent code actions duplicates
+				setTimeout(() => {
+					updateHaxeArguments(rootPath, hxmlPath);
+				}, 1000);
 			}
 			else {
 				compile(choiceToHxml(choice), true).then(() => {

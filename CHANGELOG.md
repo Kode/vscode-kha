@@ -1,3 +1,7 @@
+### 23.8.0
+
+* Make vshaxe happy, maybe
+
 ### 23.5.0
 
 * Make things more robust when Git-Bash is used

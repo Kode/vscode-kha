@@ -263,15 +263,19 @@ function choiceToHxml(choice) {
 function isValidHxml(hxmlPath) {
 	if (!fs.existsSync(hxmlPath)) return false;
 	const hxml = fs.readFileSync(hxmlPath, 'utf8');
-	const arg = hxml.split('\n').find(line => line.startsWith('-cp ') && line.includes('/Backends/'));
-	if (!arg) {
-		channel.appendLine('Warning: Path to Kha/Backends/ in hxml not found.');
-		return true;
-	}
-	const path = arg.replace('-cp ', '');
-	if (!fs.existsSync(path)) {
-		channel.appendLine(`Path ${path} not found, hxml will be regenerated.`);
-		return false;
+	const lines = hxml.split('\n');
+	const pathPrefixes = ['-cp', '-p', '--class-path'];
+	for (const line of lines) {
+		for (const pathPrefix of pathPrefixes) {
+			const prefix = `${pathPrefix} `;
+			if (!line.startsWith(prefix)) continue;
+
+			const path = line.replace(prefix, '');
+			if (!fs.existsSync(path)) {
+				channel.appendLine(`Path ${path} not found, hxml will be regenerated.`);
+				return false;
+			}
+		}
 	}
 	return true;
 }

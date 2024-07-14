@@ -1,3 +1,7 @@
+### 24.7.0
+
+* Improve hxml invalidation (by RblSb)
+
 ### 23.8.0
 
 * Make vshaxe happy, maybe

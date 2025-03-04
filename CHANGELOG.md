@@ -1,3 +1,7 @@
+### 25.3.0
+
+* Update the Xbox parameter
+
 ### 24.7.0
 
 * Improve hxml invalidation (by RblSb)

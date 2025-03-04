@@ -906,7 +906,7 @@ const KhaTaskProvider = {
 			{ arg: 'xboxone', name: 'Xbox One', default: false },
 			{ arg: 'switch', name: 'Switch', default: false },
 			{ arg: 'ps5', name: 'PlayStation 5', default: false },
-			{ arg: 'xboxscarlett', name: 'Xbox Series X|S', default: false },
+			{ arg: 'xboxseries', name: 'Xbox Series X|S', default: false },
 		];
 
 		let tasks = [];

@@ -310,8 +310,8 @@ function chmodEverything() {
 	fs.chmodSync(path.join(base, 'Tools', sysdir(), 'haxe'), 0o755);
 	fs.chmodSync(path.join(base, 'Tools', sysdir(), 'lame'), 0o755);
 	fs.chmodSync(path.join(base, 'Tools', sysdir(), 'oggenc'), 0o755);
-	fs.chmodSync(path.join(base, 'Kinc', 'Tools', sysdir(), 'kraffiti'), 0o755);
-	fs.chmodSync(path.join(base, 'Kinc', 'Tools', sysdir(), 'krafix'), 0o755);
+	fs.chmodSync(path.join(base, 'Kore', 'Tools', sysdir(), 'kraffiti'), 0o755);
+	fs.chmodSync(path.join(base, 'Kore', 'Tools', sysdir(), 'krafix'), 0o755);
 }
 
 function ResolvePackageTestPath(pkg) {

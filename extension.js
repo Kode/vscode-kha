@@ -124,10 +124,10 @@ function compile(target, silent) {
 
 let KhaHaxeInstallationProvider = {
 	activate: (provideInstallation) => {
-		const khaPath = path.join(findKha(), 'Tools', sysdir(), 'haxe' + sys2());
-		if (fs.existsSync(khaPath)) {
+		const haxePath = path.join(findKha(), 'Tools', sysdir(), 'haxe' + sys2());
+		if (fs.existsSync(haxePath)) {
 			provideInstallation({
-				haxeExecutable: khaPath,
+				haxeExecutable: haxePath,
 				haxelibExecutable: null,
 				standardLibraryPath: path.join(findKha(), 'Tools', sysdir(), 'std')
 			});
@@ -212,6 +212,8 @@ function sys2() {
 	}
 }
 
+let firstSysdirCall = true;
+let isLegacyMacosTools = false;
 function sysdir() {
 	if (os.platform() === 'linux') {
 		if (os.arch() === 'arm') return 'linux_arm';
@@ -226,7 +228,14 @@ function sysdir() {
 		return 'freebsd_x64';
 	}
 	else {
-		return 'macos';
+		if (firstSysdirCall) {
+			firstSysdirCall = false;
+			const toolsPath = path.join(findKha(), 'Tools', 'macos');
+			isLegacyMacosTools = fs.existsSync(toolsPath);
+		}
+		if (isLegacyMacosTools) return 'macos';
+		if (os.arch() === 'arm64') return 'macos_arm64';
+		return 'macos_x64';
 	}
 }
 

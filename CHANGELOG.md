@@ -1,3 +1,7 @@
+### 25.8.0
+
+* Use arch-specific Mac binaries when available
+
 ### 25.3.1
 
 * Fix things for the latest Kha
